@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Proveedores</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido"> 
+        <h:form id="formProveedores">
+            <p:dataTable id="tbProveedores"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,15"
+                         value="#{beanProveedores.listarProveedores()}"
+                         var="suc"
+                         selection="#{beanProveedores.proveedor}"
+                         selectionMode="single"
+                         rowKey="#{suc.idProveedor}"
+                         emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarBorrarProveedores').show()" 
+                        update=":formEditarBorrarProveedores"/>
+                <p:column headerText="Codigo" 
+                          sortBy="#{suc.idProveedor}" 
+                          filterBy="#{suc.idProveedor}" 
+                          filterMatchMode="contains"
+                          width="120">
+                    <h:outputText value="#{suc.idProveedor}"/>
+                </p:column>
+                 <p:column headerText="Primer Nombre">
+                                <h:outputText value="#{suc.idPersona.primerNombre}"/>
+                            </p:column>
+                            <p:column headerText="Segundo Nombre">
+                                <h:outputText value="#{suc.idPersona.segundoNombre}"/>
+                            </p:column>
+                            <p:column headerText="Primer Apellido">
+                                <h:outputText value="#{suc.idPersona.primerApellido}"/>
+                            </p:column>                            
+                            <p:column headerText="Segundo Apellido">
+                                <h:outputText value="#{suc.idPersona.segundoApellido}"/>
+                            </p:column>
+                            <p:column headerText="Telefono">
+                                <h:outputText value="#{suc.idPersona.telefono}"/>
+                            </p:column>                            
+                            <p:column headerText="Direccion">
+                                <h:outputText value="#{suc.idPersona.direccion}"/>
+                            </p:column>                                                        
+                            <p:column headerText="Tipo Persona">
+                                <h:outputText value="#{suc.idPersona.idTipoPersona.idTipoPersona.toString()}-#{suc.idPersona.idTipoPersona.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Ruc">
+                                <h:outputText value="#{suc.idPersona.ruc}"/>
+                            </p:column>
+                            <p:column headerText="Cedula Identidad">
+                                <h:outputText value="#{suc.idPersona.cedulaIdentidad}"/>
+                            </p:column>
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{suc.estado == 'A'? 'A-ACTIVO':'I-INACTIVO'}"/>
+                            </p:column>  
+                <p:column width="50">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                            
+                </p:column>   
+
+                <f:facet name="header">
+                    <h1 id="title" >Proveedores</h1>
+                    <b:commandButton value="Nuevo"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoProveedores').show()"
+                                     actionListener="#{beanProveedores.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formNuevoProveedores"/>
+                    <b:commandButton value="Reporte"
+                                     icon="ui-icon-print"
+                                     onclick="document.getElementById('formReporteProveedores:imprimir').click()"
+                                     look="primary"
+                                     iconAwesome="fa-print"
+                                     update=":formProveedores"/>                                 
+                    <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formProveedores')}"
+                                     update=":formProveedores"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />  
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

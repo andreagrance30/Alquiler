@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <h:outputStylesheet library="css" name="formularios.css" />
+                <title>Depositos Bancarios</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:layout fullPage="True">
+
+                <p:layoutUnit position="north"
+                              header="Sistema Punto de Venta"
+                              size="80"> 
+                    <h:form id="formSession">
+                        <center>
+                        <p:panelGrid columns="5">
+                            <p:outputLabel value="Usuario:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.usuarios.idUsuario}"/>
+                            <p:outputLabel value="Sucursal:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.sucursales.idSucursal.toString()}-#{beanAcceso.usuariossucursales.sucursales.descripcion}"/>
+                            <p:clock pattern="HH:mm:ss dd/MM/yyyy"/>
+                        </p:panelGrid>    
+                        </center>    
+                    </h:form>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center"
+                              header="Administrar Depositos Bancarios"> 
+                    <h:form id="formDepositosBancarios">
+                        <p:growl id="gDepositosBancarios" life="5000"/>
+                        <p:dataTable id="tbDepositosBancarios"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanDepositosBancarios.listarDepositosBancarios()}"
+                                     var="suc"
+                                     selection="#{beanDepositosBancarios.depositobancario}"
+                                     rowKey="#{suc}"
+                                     resizableColumns="true"
+                                     selectionMode="single"
+                                     emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="PF('digEditarBorrar').show()" 
+                                    update=":formEditarBorrar"/>                            
+                            <p:column headerText="Codigo" 
+                                      width="40">
+                                <h:outputText value="#{suc.idDepositoBancario}"/>
+                            </p:column>
+                            <p:column headerText="Nro Boleta">
+                                <h:outputText value="#{suc.nroBoleta}"/>
+                            </p:column>                            
+                            <p:column headerText="Fecha Deposito">
+                                <h:outputText value="#{suc.fechaDeposito}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>                             
+                            <p:column headerText="Total Cheque">
+                                <h:outputText value="#{suc.totalCheque}">
+                                    <f:convertNumber/>
+                                </h:outputText>
+                            </p:column>          
+                            <p:column headerText="Total Efectivo">
+                                <h:outputText value="#{suc.totalEfectivo}">
+                                    <f:convertNumber/>
+                                </h:outputText>
+                            </p:column>                            
+                            <p:column headerText="Cod. Recaudacion">
+                                <h:outputText value="#{suc.idRecaudacionDepositar.idRecaudacionDepositar}"/>
+                            </p:column>                            
+                            <p:column headerText="Cuenta Bancaria">
+                                <h:outputText value="#{suc.idCuentaBancaria.idEntidadEmisora.descripcion} - #{suc.idCuentaBancaria.nroCuenta}"/>
+                            </p:column> 
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{suc.estado == 'C'? 'C-CARGADO':suc.estado == 'A'?'A-APROBADO':'X-ANULADO'}"/>
+                            </p:column>                             
+                            <p:column width="2%">                                         
+                                <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>      
+                                <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center"/>
+                            </p:column>
+                            <f:facet name="header">
+                                <p:commandButton value="Nuevo"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digNuevo').show()"
+                                                 actionListener="#{beanDepositosBancarios.Nuevo()}" 
+                                                 update=":formNuevo"/>
+                                <p:commandButton value="Inicio"
+                                                 icon="ui-icon-home"
+                                                 actionListener="#{beanDepositosBancarios.Menu()}"
+                                                 update=":formDepositosBancarios"
+                                                 />
+                                <p:commandButton value="Salir"
+                                                 icon="ui-icon-circle-close"
+                                                 actionListener="#{beanDepositosBancarios.Salir()}"
+                                                 />
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+
+
+                <p:dialog widgetVar="digNuevo"
+                          header="Agregar Depositos Bancarios"
+                          modal="true"
+                          id="digNuevo">
+                    <h:form id="formNuevo"
+                            onkeypress="if (event.keyCode === 13) { return false; }">     
+                        <p:messages/>
+                        <p:panelGrid columns="2">                            
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanDepositosBancarios.depositobancario.idDepositoBancario}"
+                                         />     
+                            <h:outputText value="Nro Boleta:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.nroBoleta}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Nro Boleta">
+                            </p:inputText>
+                            <h:outputText value="Fecha Deposito:"/>
+                            <p:calendar value="#{beanDepositosBancarios.depositobancario.fechaDeposito}" 
+                                        pattern="dd/MM/yyyy"
+                                        mask="true"
+                                        locale="es"
+                                        mode="popup"
+                                        showOn="button"
+                                        required="true"
+                                        requiredMessage="Debe Ingresar Fecha Deposito"                                         
+                                         />                             
+                            <h:outputText value="Total Cheque:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.totalCheque}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;">
+                                <f:convertNumber/>
+                            </p:inputText>                                   
+                            <h:outputText value="Total Efectivo:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.totalEfectivo}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Total Efectivo">
+                                <f:convertNumber/>
+                            </p:inputText>  
+                            <h:outputText value="Recaudaciones Depositar:"/>
+                            <p:selectOneMenu value="#{beanDepositosBancarios.depositobancario.idRecaudacionDepositar}" converter="omnifaces.SelectItemsConverter"
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{beanRecaudacionesDepositar.listarRecaudacionesDepositarPendientes()}" 
+                                               var="co" 
+                                               itemLabel="#{co.idRecaudacionDepositar} - #{co.idAperturaCierreCaja.idCaja.idCaja} #{co.idAperturaCierreCaja.usuariosSucursales.sucursales.descripcion}" 
+                                               itemValue="#{co}" />   
+                            </p:selectOneMenu>   
+                            <h:outputText value="Cuenta Bancaria:"/>
+                            <p:selectOneMenu value="#{beanDepositosBancarios.depositobancario.idCuentaBancaria}" converter="omnifaces.SelectItemsConverter"
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{beanCuentasBancarias.listarCuentasBancarias()}" 
+                                               var="cu" 
+                                               itemLabel="#{cu.idCuentaBancaria} - #{cu.nroCuenta} - #{cu.idEntidadEmisora.descripcion}" 
+                                               itemValue="#{cu}" />   
+                            </p:selectOneMenu>                             
+                            <p:commandButton value='Grabar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanDepositosBancarios.Grabar()}"
+                                             update=":formNuevo"/>
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digNuevo').hide()"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
+                
+                <p:dialog widgetVar="digEditarBorrar"
+                          header="Modificar/Borrar Depositos Bancarios"
+                          modal="true"
+                          id="digEditarBorrar">
+                    <h:form id="formEditarBorrar"
+                            onkeypress="if (event.keyCode === 13) { return false; }">
+                        <p:messages/>
+                        <p:panelGrid columns="2">                                          
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanDepositosBancarios.depositobancario.idDepositoBancario}"
+                                         />     
+                            <h:outputText value="Nro Boleta:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.nroBoleta}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Nro Boleta">
+                            </p:inputText>
+                            <h:outputText value="Fecha Deposito:"/>
+                            <p:calendar value="#{beanDepositosBancarios.depositobancario.fechaDeposito}" 
+                                        pattern="dd/MM/yyyy"
+                                        mask="true"
+                                        locale="es"
+                                        mode="popup"
+                                        showOn="button"
+                                        required="true"
+                                        requiredMessage="Debe Ingresar Fecha Deposito"                                         
+                                         />                             
+                            <h:outputText value="Total Cheque:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.totalCheque}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;">
+                                <f:convertNumber/>
+                            </p:inputText>                                   
+                            <h:outputText value="Total Efectivo:"/>
+                            <p:inputText value="#{beanDepositosBancarios.depositobancario.totalEfectivo}" 
+                                         maxlength="10" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Total Efectivo">
+                                <f:convertNumber/>
+                            </p:inputText>  
+                            <h:outputText value="Recaudaciones Depositar:"/>
+                            <p:selectOneMenu value="#{beanDepositosBancarios.depositobancario.idRecaudacionDepositar}" converter="omnifaces.SelectItemsConverter"
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{beanRecaudacionesDepositar.listarRecaudacionesDepositarPendientes()}" 
+                                               var="co" 
+                                               itemLabel="#{co.idRecaudacionDepositar} - #{co.idAperturaCierreCaja.idCaja.idCaja} #{co.idAperturaCierreCaja.usuariosSucursales.sucursales.descripcion}" 
+                                               itemValue="#{co}" />   
+                            </p:selectOneMenu>    
+                            <h:outputText value="Cuenta Bancaria:"/>
+                            <p:selectOneMenu value="#{beanDepositosBancarios.depositobancario.idCuentaBancaria}" converter="omnifaces.SelectItemsConverter"
+                                              filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{beanCuentasBancarias.listarCuentasBancarias()}" 
+                                               var="cu" 
+                                               itemLabel="#{cu.idCuentaBancaria} - #{cu.nroCuenta} - #{cu.idEntidadEmisora.descripcion}" 
+                                               itemValue="#{cu}" />   
+                            </p:selectOneMenu>                             
+                            <p:commandButton value='Modificar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanDepositosBancarios.Editar()}"
+                                             update=":formEditarBorrar"
+                                             />
+                            <p:commandButton value='Anular'
+                                             icon='ui-icon-trash'
+                                             onclick="PF('digAnular').show()"
+                                             update=":formEditarBorrar"
+                                             />
+                            <p:commandButton value='Aprobar'
+                                             icon='ui-icon-circle-check'
+                                             onclick="PF('digAprobar').show()"
+                                             update=":formEditarBorrar"
+                                             />                            
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digEditarBorrar').hide()"
+                                             />
+                        </p:panelGrid>
+                    </h:form>    
+                </p:dialog>
+
+                    <p:confirmDialog widgetVar="digAprobar"
+                                     header="Confirmar"
+                                     message="Desea Aprobar este Deposito Bancario?"> 
+                        <h:form id="formAprobar">
+                            <p:commandButton value='Si'
+                                             actionListener="#{beanDepositosBancarios.Aprobar()}"/>
+                            <p:commandButton value="No"
+                                             onclick="PF('digAprobar').hide();"/>
+                        </h:form> 
+                    </p:confirmDialog>
+                
+                    <p:confirmDialog widgetVar="digAnular"
+                                     header="Confirmar"
+                                     message="Desea Anular este Deposito Bancario?"> 
+                        <h:form id="formAnular">
+                            <p:commandButton value='Si'                                             
+                                             actionListener="#{beanDepositosBancarios.Anular()}"/>
+                            <p:commandButton value="No"
+                                             onclick="PF('digAnular').hide();"/>
+                        </h:form> 
+                    </p:confirmDialog>                
+                               
+            </p:layout> 
+        </h:body>
+    </f:view>
+</html>
+

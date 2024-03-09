@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Orden de Compra</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <f:facet name="header">
+            <h1 id="title" >Orden de Compra</h1>
+        </f:facet>
+                    <h:form id="formOrdenesCompras"> 
+                        <p:fieldset>
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Codigo Presupuesto: "/>
+                                <p:inputText value="#{beanOrdenesCompras.ordenescompras.idOrdenCompra}"
+                                             readonly="true"/>
+                                <h:outputText value="Pedido:"/>
+                                <p:selectOneMenu value="#{beanOrdenesCompras.ordenescompras.idPedido}" converter="omnifaces.SelectItemsConverter"
+                                                 filter="true" 
+                                                 filterMatchMode="contains"
+                                                 widgetVar="pedido"
+                                                 id="pedido"
+                                                 style="width: 800px;"
+                                                 disabled="#{beanOrdenesCompras.ordenescompras.idOrdenCompra!=null?true:false}"
+                                                 >
+                                    <p:ajax event="change" listener="#{beanOrdenesCompras.CargaDetalle()}" />
+                                    <f:selectItem itemValue=""
+                                                  itemLabel=""/>
+                                    <f:selectItems value="#{beanPedidos.listarPedidosAprobados()}" 
+                                                   var="pe" 
+                                                   itemLabel="Pedido: #{pe.idPedido} - Nombre: #{pe.idEmpleado.personas.primerNombre} #{pe.idEmpleado.personas.segundoNombre} #{pe.idEmpleado.personas.primerApellido} #{pe.idEmpleado.personas.segundoApellido}" 
+                                                   itemValue="#{pe}" />   
+                                </p:selectOneMenu>                                  
+                            </p:panelGrid>
+                            <p:panelGrid columns="1">
+                                <p:dataTable id="tbPedidosDet"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanOrdenesCompras.listarPedidosDet()}"
+                                     var="ve"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                                <p:column headerText="Codigo" 
+                                          width="40">
+                                    <h:outputText value="#{ve.stock.productos.idProducto}"/>
+                                </p:column>
+                                <p:column headerText="Descripcion">
+                                    <h:outputText value="#{ve.stock.productos.descripcion}"/>
+                                </p:column>                                           
+                                <p:column headerText="Cantidad">
+                                    <h:outputText value="#{ve.cantidad}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Detalle de Pedido"/>
+                                </f:facet>
+                                </p:dataTable>
+                            </p:panelGrid>                            
+                        </p:fieldset>
+                        <p:fieldset>
+                            <p:panelGrid columns="1">
+                                <p:dataTable id="tbOrdenesComprasDet"
+                                     paginator="true"
+                                     rows="2"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanOrdenesCompras.listarOrdenesComprasDet()}"
+                                     var="ve"
+                                     selection="#{beanOrdenesCompras.ordenescomprasdet}"
+                                     selectionMode="single"
+                                     rowKey="#{ve}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        oncomplete="PF('digEditarProductoOrden').show()" 
+                                        update=":formEditarProductoOrden"/>
+                                <p:ajax event="rowUnselect" update=":formOrdenesCompras:tbOrdenesComprasDet"/>
+                                <p:column headerText="Nro Presupuesto">
+                                    <h:outputText value="{ve.presupuestosDet.presupuestos.nroPresupuesto}"/>
+                                </p:column>           
+                                <p:column headerText="Proveedor">
+                                    <h:outputText value="{ve.presupuestos.idProveedor.personas.primerNombre} {ve.presupuestos.idProveedor.personas.segundoNombre} {ve.presupuestos.idProveedor.personas.primerApellido} {ve.presupuestos.idProveedor.personas.segundoApellido}"/>
+                                </p:column>         
+                                <p:column headerText="Producto">
+                                    <h:outputText value="{ve.presupuestosDet.stock.productos.idProducto} - {ve.presupuestosDet.stock.productos.descripcion} {ve.presupuestosDet.stock.depositos.descripcion} "/>
+                                </p:column>                                
+                                <p:column headerText="Impuesto">
+                             <!--       <h:outputText value="{ve.porcIva.intValue()==11?'IVA 10%':(ve.porcIva.intValue()==21?'IVA 5%':'EXENTAS')}">
+                                        <f:convertNumber/>
+                                    </h:outputText>  -->
+                                </p:column>                    
+                                <p:column headerText="Cantidad Presp.">
+                                 <!--   <h:outputText value="{ve.presupuestosDet.cantidad}">
+                                        <f:convertNumber/>
+                                    </h:outputText> -->
+                                </p:column>
+                                <p:column headerText="Fecha Validez">
+                                <!--   <h:outputText value="{ve.presupuestosDet.presupuestos.validezPresupuesto}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>-->
+                                </p:column>                                 
+                                <p:column headerText="Cantidad">
+                                    <h:outputText value="#{ve.cantidad}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column> 
+                                <p:column headerText="Precio Uni.">
+                                    <h:outputText value="#{ve.precioUni}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Total Linea">
+                                    <h:outputText value="#{ve.cantidad * ve.precioUni}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>                                
+                                <p:column width="2%">
+                                        <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center;float:left;"/>                                          
+                                        <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>                                                                             
+                                </p:column>                                                      
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </p:fieldset>
+                        <p:fieldset>
+                            <p:panelGrid columns="6">
+                                 <b:commandButton value="Grabar"
+                                     iconAwesome="fa-plus-circle"
+                                     actionListener="#{beanOrdenesCompras.Grabar()}" 
+                                     look="success"
+                                     update=":formOrdenesCompras"/>  
+                                <p:commandButton value="Anular/Aprobar/Editar"
+                                                 icon="ui-icon-newwin"
+                                                 oncomplete="PF('digAnularAprobarOrden').show()"      
+                                                 actionListener="#{beanOrdenesCompras.Nuevo()}"
+                                                 update=":formAnularAprobarOrden"/>  
+                                <b:commandButton value='Cancelar'
+                                                 look="danger"
+                                                 iconAwesome="fa-reply"
+                                                 actionListener="#{beanOrdenesCompras.Nuevo()}"
+                                                 update="@none"/> 
+                                   <b:commandButton value="Inicio"
+                                     iconAwesome="fa-home"
+                                     actionListener="#{Metodos.Menu('formOrdenesCompras')}"
+                                     update=":formOrdenesCompras"
+                                     look="info"
+                                     />                              
+                            </p:panelGrid>
+                        </p:fieldset>
+                    </h:form> 
+                
+                 <!-- Editar Producto  Dt-->
+                <p:dialog widgetVar="digEditarProductoOrden" 
+                          header="Modificar/Borrar Producto" 
+                          closable="false"
+                          modal="true">
+                    <h:form id="formEditarProductoOrden"
+                            onkeypress="if (event.keyCode === 13) { return false; }">
+                        <p:messages/>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Producto:"/>
+                            <p:inputText value="{beanOrdenesCompras.ordenescomprasdet.presupuestosDet.stock.productos.idProducto} - {beanOrdenesCompras.ordenescomprasdet.presupuestosDet.stock.productos.descripcion} {beanOrdenesCompras.ordenescomprasdet.presupuestosDet.stock.depositos.descripcion}"
+                                         readonly="true"/>                            
+                            <h:outputText value="Impuesto:"/>
+                            <p:inputText value="#{beanOrdenesCompras.ordenescomprasdet.porcIva==11?'IVA 10%':(ve.porcIva.intValue()==21?'IVA 5%':'EXENTAS')}"
+                                         readonly="true"/> 
+                            <h:outputText value="Cantidad"/>
+                            <p:inputText value="#{beanOrdenesCompras.ordenescomprasdet.cantidad}" 
+                                         maxlength="5" 
+                                         onblur="value = value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Cantidad"                                          
+                                         onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         /> 
+                            <h:outputText value="Precio Unitario:"/>
+                            <p:inputText value="#{beanOrdenesCompras.ordenescomprasdet.precioUni}" 
+                                         readonly="true">
+                                <f:convertNumber/>
+                            </p:inputText>                            
+                            <p:commandButton value='Aceptar'
+                                             icon='ui-icon-circle-check'
+                                             update=":formEditarProductoOrden"
+                                             actionListener="#{beanOrdenesCompras.editarProducto()}"/>
+                            <p:commandButton value='Borrar'
+                                             icon='ui-icon-trash'
+                                             actionListener="#{beanOrdenesCompras.EliminarProducto()}"/>                           
+                        </p:panelGrid>                       
+                    </h:form>
+                </p:dialog>
+      </ui:define>
+</ui:composition>
+

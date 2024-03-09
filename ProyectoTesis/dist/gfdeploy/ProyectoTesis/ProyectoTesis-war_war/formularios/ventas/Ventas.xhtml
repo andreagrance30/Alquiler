@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Ventas</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <f:facet name="header">
+            <h1 id="title" >Factura de Venta</h1>
+        </f:facet>
+        <h:form id="formVentas">
+                        <p:fieldset>
+                            <p:panelGrid columns="5">
+                                <h:outputText value="Cliente:"/>
+                                <p:selectOneMenu value="#{beanVentas.venta.idCliente}" converter="omnifaces.SelectItemsConverter"
+                                                 filter="true" 
+                                                 filterMatchMode="contains"
+                                                 widgetVar="cliente"
+                                                 id="cliente"
+                                                 style="width: 800px;"
+                                                 >
+                                    <f:selectItems value="#{beanClientes.listarClientes()}" 
+                                                   var="im" 
+                                                   itemLabel="Cod.: #{im.idCliente} - Nombre: #{im.personas.primerNombre} #{im.personas.segundoNombre} #{im.personas.primerApellido} #{im.personas.segundoApellido} - Ruc: #{im.personas.ruc} - C.I: #{im.personas.cedulaIdentidad}" 
+                                                   itemValue="#{im}" />   
+                                </p:selectOneMenu>  
+                                <b:commandButton value="Mant. Cliente"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoClientes').show()"
+                                     actionListener="#{beanClientes.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formVentas"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="8">
+                                <p:outputLabel value="Nro. Comprobante:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.venta.nroComprobante}"/>
+                                <p:outputLabel value="Nro. Timbrado:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.venta.nroTimbrado}"/>
+                                <p:outputLabel value="Condiciones:"/>
+                                <p:selectOneMenu value="#{beanVentas.venta.idCondicion}" converter="omnifaces.SelectItemsConverter"
+                                                 filter="true" filterMatchMode="contains"
+                                                 widgetVar="condicion"
+                                                 id="condicion">
+                                    <f:selectItems value="#{beanCondiciones.listarCondiciones()}" 
+                                                   var="co" 
+                                                   itemLabel="#{co.idCondicion} - #{co.descripcion} #{co.intervaloDias}" 
+                                                   itemValue="#{co}" />   
+                                </p:selectOneMenu> 
+                                <p:outputLabel value="Total:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.total}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                            </p:panelGrid>
+                            <p:panelGrid columns="6">                             
+                                <p:outputLabel value="Total Grav. 5%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalgrav5}">
+                                    <f:convertNumber/>
+                                </p:inputText>
+                                <p:outputLabel value="Total Grav. 10%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalgrav10}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Exentas:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalexentas}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva 5%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva5}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva 10%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva10}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                            </p:panelGrid>
+                        </p:fieldset>
+                        <p:fieldset>
+                            <p:panelGrid columns="1">
+                                <p:dataTable id="tbVentasDet"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanVentas.listarVentasDet()}"
+                                     var="ve"
+                                     selection="#{beanVentas.ventadet}"
+                                     selectionMode="single"
+                                     rowKey="#{ve.stock}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        oncomplete="PF('digEditarProductoVentas').show()" 
+                                        update=":formEditarProductoVentas"/>
+                                <p:column headerText="Codigo" 
+                                          width="40">
+                                    <h:outputText value="#{ve.stock.productos.idProducto}"/>
+                                </p:column>
+                                <p:column headerText="Descripcion">
+                                    <h:outputText value="#{ve.stock.productos.descripcion}"/>
+                                </p:column>                             
+                                <p:column headerText="Precio Unitario">
+                                    <h:outputText value="#{ve.stock.productos.precioVenta}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>   
+                                <p:column headerText="% Iva">
+                                    <h:outputText value="#{ve.stock.productos.idImpuesto.descripcion}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>                                             
+                                <p:column headerText="Cantidad">
+                                    <h:outputText value="#{ve.cantidad}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>                                  
+                                <p:column headerText="Total Linea" resizable="false">
+                                    <h:outputText value="#{(ve.stock.productos.precioVenta * ve.cantidad)}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column width="2%">
+                                        <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center;float:left;"/>                                          
+                                        <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>                                                                             
+                                </p:column>                               
+                                <f:facet name="header" >
+                                    <p:commandButton value="Agregar Producto"
+                                                     icon="ui-icon-circle-plus"
+                                                     oncomplete="PF('digAgregarProductoVentas').show()"
+                                                     actionListener="#{beanVentas.NuevoProducto()}" 
+                                                     update=":formAgregarProductoVentas"/>                         
+                                </f:facet>                                
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </p:fieldset>
+                        <p:fieldset>
+                            <p:panelGrid columns="6">
+                                 <b:commandButton value="Guardar"
+                                     iconAwesome="fa-plus-circle"
+                                     actionListener="#{beanVentas.Grabar()}"
+                                     look="success"
+                                     update=":formVentas"/>
+                                <b:commandButton value="Cancelar"
+                                     iconAwesome="fa-trash-o"
+                                     actionListener="#{beanVentas.Nuevo()}" 
+                                     look="danger"
+                                     update=":formVentas"/> 
+                               <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formVentas')}"
+                                     update=":formVentas"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />                              
+                            </p:panelGrid>
+                        </p:fieldset>
+                    </h:form> 
+                <p:dialog widgetVar="digClientes" 
+                          header="Clientes" 
+                          closable="false"
+                          modal="true" >
+                    <h:form id="formClientes">
+                        <p:growl id="gClientes" life="5000"/>
+                        <p:dataTable id="tbClientes"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanClientes.listarClientes()}"
+                                     var="suc"
+                                     selection="#{beanClientes.cliente}"
+                                     selectionMode="single"
+                                     rowKey="#{suc.idCliente}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="PF('digEditarBorrarPersonas').show()" 
+                                    update=":formEditarBorrarPersonas"/>
+                            <p:column headerText="Codigo" 
+                                      width="40">
+                                <h:outputText value="#{suc.personas.idPersona}"/>
+                            </p:column>
+                            <p:column headerText="Primer Nombre">
+                                <h:outputText value="#{suc.personas.primerNombre}"/>
+                            </p:column>
+                            <p:column headerText="Segundo Nombre">
+                                <h:outputText value="#{suc.personas.segundoNombre}"/>
+                            </p:column>
+                            <p:column headerText="Primer Apellido">
+                                <h:outputText value="#{suc.personas.primerApellido}"/>
+                            </p:column>                            
+                            <p:column headerText="Segundo Apellido">
+                                <h:outputText value="#{suc.personas.segundoApellido}"/>
+                            </p:column>
+                            <p:column headerText="Telefono">
+                                <h:outputText value="#{suc.personas.telefono}"/>
+                            </p:column>                            
+                            <p:column headerText="Direccion">
+                                <h:outputText value="#{suc.personas.direccion}"/>
+                            </p:column>                                                        
+                            <p:column headerText="Tipo Persona">
+                                <h:outputText value="#{suc.personas.idTipoPersona.idTipoPersona.toString()}-#{suc.personas.idTipoPersona.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Ruc">
+                                <h:outputText value="#{suc.personas.ruc}"/>
+                            </p:column>
+                            <p:column headerText="Cedula Identidad">
+                                <h:outputText value="#{suc.personas.cedulaIdentidad}"/>
+                            </p:column>
+                            <p:column headerText="Estado" resizable="false">
+                                <h:outputText value="#{suc.estado == 'A'? 'A-ACTIVO':'I-INACTIVO'}"/>
+                            </p:column>                             
+                            <p:column width="2%">
+                                    <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center;float:left;"/>                                          
+                                    <span class="ui-icon ui-icon-pencil" style="display:inline-block;width:50%;text-align:center"/>                                                                             
+                            </p:column>  
+                            <f:facet name="header" >
+                                <p:commandButton value="Nuevo"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digNuevo').show()"
+                                                 actionListener="#{beanClientes.Nuevo()}" 
+                                                 update=":formNuevo"/>
+                                <p:commandButton value="Agregar Persona"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digPersonas').show()"
+                                                 actionListener="#{beanClientes.Nuevo()}" 
+                                                 update=":formPersonas"/>  
+                                <p:commandButton value="Volver"
+                                                 icon="ui-icon-arrowreturnthick-1-w"
+                                                 oncomplete="PF('digClientes').hide()"
+                                                 update=":formVentas"/>                                
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                    <p:dialog widgetVar="digNuevo"
+                              header="Agregar Clientes"
+                              id="digNuevo">
+                        <h:form id="formNuevo"
+                                onkeypress="if (event.keyCode === 13) { return false; }">     
+                            <p:messages/>
+                            <p:panelGrid columns="2">                            
+                                <h:outputText value="Codigo:"/>
+                                <p:inputText readonly="true"
+                                             value="#{beanClientes.cliente.idCliente}"
+                                             />
+                                <h:outputText value="Primer Nombre:"/>
+                                <p:inputText value="#{beanClientes.personas.primerNombre}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Primer Nombre" 
+                                             />
+                                <h:outputText value="Segundo Nombre:"/>
+                                <p:inputText value="#{beanClientes.personas.segundoNombre}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"  
+                                             />                            
+                                <h:outputText value="Primer Apellido:"/>
+                                <p:inputText value="#{beanClientes.personas.primerApellido}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Primer Apellido"
+                                             />                            
+                                <h:outputText value="Segundo Apellido:"/>
+                                <p:inputText value="#{beanClientes.personas.segundoApellido}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"                                       
+                                             />       
+                                <h:outputText value="Telefono:"/>
+                                <p:inputMask value="#{beanClientes.personas.telefono}" 
+                                             maxlength="15" 
+                                             onblur="value = value.toUpperCase()" 
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Telefono"
+                                             mask="999-999-999"/> 
+                                <h:outputText value="Direccion:"/>
+                                <p:inputTextarea value="#{beanClientes.personas.direccion}" 
+                                                 autoResize="true|false" 
+                                                 maxlength="30" 
+                                                 onblur="value = value.toUpperCase()"
+                                                 required="true"
+                                                 requiredMessage="Debe Ingresar Direccion"
+                                                 />                            
+                                <h:outputText value="Tipo Persona:"/>
+                                <p:selectOneMenu value="#{beanClientes.personas.idTipoPersona}" converter="omnifaces.SelectItemsConverter"
+                                                 filter="true" filterMatchMode="contains">
+                                    <f:selectItems value="#{beanTiposPersonas.listarTiposPersonas()}" 
+                                                   var="im" 
+                                                   itemLabel="#{im.idTipoPersona}-#{im.descripcion}" 
+                                                   itemValue="#{im}" />   
+                                </p:selectOneMenu>
+                                <h:outputText value="Ruc:"/>
+                                <p:inputText value="#{beanClientes.personas.ruc}" 
+                                             maxlength="10" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Ruc"                                             
+                                             onkeypress="if ((event.which &lt; 45 || event.which &gt; 45) &amp; (event.which &lt; 48 || event.which &gt; 57)){ return false; }"
+                                             />
+                                <h:outputText value="Cedula de Identidad"/>
+                                <p:inputText value="#{beanClientes.personas.cedulaIdentidad}" 
+                                             maxlength="10" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Cedula de Identidad"                                         
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             />
+                                <h:outputText value="Estado:"/>
+                                <p:selectOneMenu value="#{beanClientes.cliente.estado}">                                
+                                    <f:selectItem itemLabel = "A-ACTIVO" 
+                                                  itemValue = "A"/> 
+                                    <f:selectItem itemLabel = "I-INACTIVO" 
+                                                  itemValue = "I"/>                                
+                                </p:selectOneMenu>                             
+                                <p:commandButton value='Grabar'
+                                                 icon='ui-icon-disk'
+                                                 actionListener="#{beanClientes.Grabar()}"
+                                                 update=":formNuevo"/>
+                                <p:commandButton value='Cancelar'
+                                                 icon='ui-icon-close'
+                                                 oncomplete="PF('digNuevo').hide()"/>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog widgetVar="digEditarBorrarVentas"
+                              header="Modificar/Borrar Clientes"
+                              id="digEditarBorrarVentas">
+                        <h:form id="formEditarBorrarVentas"
+                                onkeypress="if (event.keyCode === 13) { return false; }">
+                            <p:messages/>
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Codigo:"/>
+                                <p:inputText readonly="true"
+                                             value="#{beanClientes.cliente.personas.idPersona}"
+                                             />
+                                <h:outputText value="Primer Nombre:"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.primerNombre}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Primer Nombre"                                         
+                                             />
+                                <h:outputText value="Segundo Nombre:"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.segundoNombre}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"                                        
+                                             />                            
+                                <h:outputText value="Primer Apellido:"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.primerApellido}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Primer Apellido"                                         
+                                             />                            
+                                <h:outputText value="Segundo Apellido:"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.segundoApellido}" 
+                                             maxlength="20" 
+                                             onblur="value = value.toUpperCase()"                                       
+                                             />
+                                <h:outputText value="Telefono:"/>
+                                <p:inputMask value="#{beanClientes.cliente.personas.telefono}" 
+                                             maxlength="15" 
+                                             onblur="value = value.toUpperCase()" 
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Telefono"
+                                             mask="999-999-999"/> 
+                                <h:outputText value="Direccion:"/>
+                                <p:inputTextarea value="#{beanClientes.cliente.personas.direccion}" 
+                                                 autoResize="true|false" 
+                                                 maxlength="30" 
+                                                 onblur="value = value.toUpperCase()"
+                                                 required="true"
+                                                 requiredMessage="Debe Ingresar Direccion"
+                                                 />                               
+                                <h:outputText value="Tipo Persona:"/>
+                                <p:selectOneMenu value="#{beanClientes.cliente.personas.idTipoPersona}" converter="omnifaces.SelectItemsConverter"
+                                                 filter="true" filterMatchMode="contains">
+                                    <f:selectItems value="#{beanTiposPersonas.listarTiposPersonas()}" 
+                                                   var="im" 
+                                                   itemLabel="#{im.idTipoPersona}-#{im.descripcion}" 
+                                                   itemValue="#{im}" />   
+                                </p:selectOneMenu>
+                                <h:outputText value="Ruc:"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.ruc}" 
+                                             maxlength="10" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Cedula de Ruc"                                          
+                                             onkeypress="if ((event.which &lt; 45 || event.which &gt; 45) &amp; (event.which &lt; 48 || event.which &gt; 57)){ return false; }"
+                                             />
+                                <h:outputText value="Cedula de Identidad"/>
+                                <p:inputText value="#{beanClientes.cliente.personas.cedulaIdentidad}" 
+                                             maxlength="10" 
+                                             onblur="value = value.toUpperCase()"
+                                             required="true"
+                                             requiredMessage="Debe Ingresar Cedula de Identidad"                                          
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             /> 
+                                <h:outputText value="Estado:"/>
+                                <p:selectOneMenu value="#{beanClientes.cliente.estado}">                                
+                                    <f:selectItem itemLabel = "A-ACTIVO" 
+                                                  itemValue = "A"/> 
+                                    <f:selectItem itemLabel = "I-INACTIVO" 
+                                                  itemValue = "I"/>                                
+                                </p:selectOneMenu>                             
+                                <p:commandButton value='Modificar'
+                                                 icon='ui-icon-disk'
+                                                 actionListener="#{beanClientes.Editar()}"
+                                                 update=":formEditarBorrarVentas"/>
+                                <p:commandButton value='Borrar'
+                                                 icon='ui-icon-trash'
+                                                 actionListener="#{beanClientes.Borrar()}"
+                                                 />                            
+                                <p:commandButton value='Cancelar'
+                                                 icon='ui-icon-close'
+                                                 oncomplete="PF('digEditarBorrarVentas').hide()"/>
+                            </p:panelGrid>
+                        </h:form>    
+                    </p:dialog>
+
+                    <p:dialog widgetVar="digPersonas"
+                              header="Agregar Personas">
+                        <h:form id="formPersonas"
+                                onkeypress="if (event.keyCode === 13) { return false; }">
+                            <p:messages/>
+                            <p:dataTable id="tbPersonas" 
+                                         style="width:1000px"
+                                         paginator="true"
+                                         rows="10"
+                                         rowsPerPageTemplate="5,10,15"
+                                         selectionMode="single"
+                                         value="#{beanPersonas.listarPersonas()}"
+                                         var="cl"
+                                         selection="#{beanClientes.personas}"
+                                         rowKey="#{cl.idPersona}"
+                                         emptyMessage="No hay datos">
+                                <p:column headerText="Codigo">
+                                    <h:outputText value="#{cl.idPersona}"/>
+                                </p:column>
+                                <p:column headerText="Primer Nombre" filterBy="#{cl.primerNombre}" >
+                                    <h:outputText value="#{cl.primerNombre}"/>
+                                </p:column>
+                                <p:column headerText="Segundo Nombre" filterBy="#{cl.segundoNombre}" >
+                                    <h:outputText value="#{cl.segundoNombre}"/>
+                                </p:column>           
+                                <p:column headerText="Primer Apellido" filterBy="#{cl.primerApellido}">
+                                    <h:outputText value="#{cl.primerApellido}"/>
+                                </p:column>
+                                <p:column headerText="Segundo Apellido" filterBy="#{cl.segundoApellido}">
+                                    <h:outputText value="#{cl.segundoApellido}"/>
+                                </p:column>
+                                <p:column headerText="Telefono">
+                                    <h:outputText value="#{cl.telefono}"/>
+                                </p:column>
+                                <p:column headerText="Direccion">
+                                    <h:outputText value="#{cl.direccion}"/>
+                                </p:column>
+                                <p:column headerText="Tipo Persona">
+                                    <h:outputText value="#{cl.idTipoPersona.idTipoPersona}-#{cl.idTipoPersona.descripcion}"/>
+                                </p:column>
+                                <p:column headerText="Ruc">
+                                    <h:outputText value="#{cl.ruc}"/>
+                                </p:column>                            
+                                <p:column headerText="Cedula de Identidad">
+                                    <h:outputText value="#{cl.cedulaIdentidad}"/>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:commandButton value='Aceptar'
+                                                     icon='ui-icon-circle-check'
+                                                     update=":formPersonas"
+                                                     actionListener="#{beanClientes.AgregarCliente()}"/>
+                                    <p:commandButton value='Cancelar'
+                                                     icon='ui-icon-close'
+                                                     oncomplete="PF('digPersonas').hide()"/>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:form>
+                    </p:dialog>
+                </p:dialog>
+                <p:dialog widgetVar="digReporte"
+                          header="Reporte"
+                          modal="true"
+                          id="digReporte">
+                    <h:form id="formReporte">
+                        <p:panelGrid columns="2">                                                      
+                            <p:commandButton value='Imprimir'
+                                             id="imprimir"
+                                             actionListener="#{beanVentas.Reporte()}" 
+                                             ajax="false"
+                                             onclick="target='_blank'" />                            
+                        </p:panelGrid>                    
+                    </h:form>
+                </p:dialog>    
+                <p:confirmDialog id="digCobros"
+                                 widgetVar="digCobros"
+                                 header="Confirmar"
+                                 message="Quiere dirigerse a realizar el cobro?"> 
+                    <h:form id="formCobros">        
+                        <p:commandButton value='Si'
+                                         id="btnsi"
+                                         actionListener="#{beanVentas.Cobros()}"/>
+                        <p:commandButton value="No"
+                                         onclick="PF('digCobros').hide();"/>
+                    </h:form>       
+                </p:confirmDialog>
+              </ui:define>
+</ui:composition>

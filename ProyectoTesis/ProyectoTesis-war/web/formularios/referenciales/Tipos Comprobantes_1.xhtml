@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <h:outputStylesheet library="css" name="formularios.css" />
+                <title>TiposComprobantes</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:layout fullPage="True">
+
+                <p:layoutUnit position="north"
+                              header="Sistema de control de Alquiler"
+                              size="80"> 
+                    <h:form id="formSession">
+                        <center>
+                        <p:panelGrid columns="5">
+                            <p:outputLabel value="Usuario:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.usuarios.idUsuario}"/>
+                            <p:outputLabel value="Sucursal:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.sucursales.idSucursal.toString()}-#{beanAcceso.usuariossucursales.sucursales.descripcion}"/>
+                            <p:clock pattern="HH:mm:ss dd/MM/yyyy"/>
+                        </p:panelGrid>    
+                        </center>    
+                    </h:form>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center"
+                              header="Administrar TiposComprobantes"> 
+                    <h:form id="formTiposComprobantes">
+                        <p:growl id="gTiposComprobantes" life="5000"/>
+                        <p:dataTable id="tbTiposComprobantes"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanTiposComprobantes.listarTiposComprobantes()}"
+                                     var="suc"
+                                     selection="#{beanTiposComprobantes.tipoComprobante}"
+                                     selectionMode="single"
+                                     rowKey="#{suc.idTipoComprobante}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="PF('digEditarBorrar').show()" 
+                                    update=":formEditarBorrar"/>
+                            <p:column headerText="Codigo" 
+                                      width="40">
+                                <h:outputText value="#{suc.idTipoComprobante}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{suc.descripcion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="Seleccione para Editar/Eliminar"/>
+                            </p:column>
+                            <f:facet name="header">
+                                <p:commandButton value="Nuevo"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digNuevo').show()"
+                                                 actionListener="#{beanTiposComprobantes.Nuevo()}" 
+                                                 update=":formNuevo"/>
+                                <p:commandButton value="Inicio"
+                                                 icon="ui-icon-home"
+                                                 actionListener="#{beanTiposComprobantes.Menu()}"
+                                                 update=":formTiposComprobantes"
+                                                 />
+                                <p:commandButton value="Salir"
+                                                 icon="ui-icon-circle-close"
+                                                 actionListener="#{beanTiposComprobantes.Salir()}"
+                                                 />
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+
+
+                <p:dialog widgetVar="digNuevo"
+                          header="Agregar TiposComprobantes"
+                          id="digNuevo">
+                    <h:form id="formNuevo"
+                            onkeypress="if (event.keyCode === 13) { return false; }">     
+                        <p:messages/>
+                        <p:panelGrid columns="2">                            
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanTiposComprobantes.tipoComprobante.idTipoComprobante}"
+                                         />                       
+                            <h:outputText value="Descripcion:"/>
+                            <p:inputText value="#{beanTiposComprobantes.tipoComprobante.descripcion}" 
+                                         maxlength="20" 
+                                         onblur="value=value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Descripcion"
+                                         />                            
+                            <p:commandButton value='Grabar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanTiposComprobantes.Grabar()}"
+                                             update=":formNuevo"/>
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digNuevo').hide()"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
+                
+                <p:dialog widgetVar="digEditarBorrar"
+                          header="Modificar/Borrar TiposComprobantes"
+                          id="digEditarBorrar">
+                    <h:form id="formEditarBorrar"
+                            onkeypress="if (event.keyCode === 13) { return false; }"> <!-- Para evitar que se guarde al hacer enter-->
+                        <p:messages/>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanTiposComprobantes.tipoComprobante.idTipoComprobante}"/>
+                            <h:outputText value="Descripcion:"/>
+                            <p:inputText value="#{beanTiposComprobantes.tipoComprobante.descripcion}" 
+                                         maxlength="20" 
+                                         onblur="value=value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Descripcion"                                         
+                                         />
+                            <p:commandButton value='Modificar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanTiposComprobantes.Editar()}"
+                                             update=":formEditarBorrar"/>
+                            <p:commandButton value='Borrar'
+                                             icon='ui-icon-trash'
+                                             actionListener="#{beanTiposComprobantes.Borrar()}"
+                                             />                            
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digEditarBorrar').hide()"/>
+                        </p:panelGrid>
+                    </h:form>    
+                </p:dialog>
+            </p:layout> 
+        </h:body>
+    </f:view>
+</html>
+

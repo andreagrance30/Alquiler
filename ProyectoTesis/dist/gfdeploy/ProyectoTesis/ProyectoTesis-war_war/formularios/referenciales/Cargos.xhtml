@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Cargos</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido"> 
+        <h:form id="formCargos">
+            <p:dataTable id="tbCargos"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,15"
+                         value="#{beanCargos.listarCargos()}"
+                         var="suc"
+                         selection="#{beanCargos.cargo}"
+                         selectionMode="single"
+                         rowKey="#{suc.idCargo}"
+                         emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarBorrarCargos').show()" 
+                        update=":formEditarBorrarCargos"/>
+                <p:column headerText="Codigo" 
+                          sortBy="#{suc.idCargo}" 
+                          filterBy="#{suc.idCargo}" 
+                          filterMatchMode="contains"
+                          width="120">
+                    <h:outputText value="#{suc.idCargo}"/>
+                </p:column>
+                <p:column headerText="Descripcion"
+                          sortBy="#{suc.descripcion}" 
+                          filterBy="#{suc.descripcion}" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{suc.descripcion}"/>
+                </p:column>
+                <p:column width="50">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                            
+                </p:column>   
+
+                <f:facet name="header">
+                    <h1 id="title" >Cargos</h1>
+                    <b:commandButton value="Nuevo"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoCargos').show()"
+                                     actionListener="#{beanCargos.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formNuevoCargos"/>
+                   <b:commandButton value="Reporte"
+                                     icon="ui-icon-print"
+                                     onclick="document.getElementById('formReporteCargos:imprimir').click()"
+                                     look="primary"
+                                     iconAwesome="fa-print"
+                                     update=":formCargos"/>                                 
+                    <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formCargos')}"
+                                     update=":formCargos"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />  
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

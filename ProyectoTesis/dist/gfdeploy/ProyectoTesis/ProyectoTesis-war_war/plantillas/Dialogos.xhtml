@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui">
+    <!-- Cajas -->
+    <p:dialog widgetVar="digNuevoCajas"
+              header="Agregar Cajas"
+              modal="true"
+              id="digNuevoCajas">
+        <h:form id="formNuevoCajas">     
+            <p:messages/>
+            <p:panelGrid columns="2">                            
+                <h:outputText value="Codigo:"/>
+                <p:inputText readonly="true"
+                             value="#{beanCajas.caja.idCaja}"
+                             />
+                <h:outputText value="Estado:"/>
+                <p:selectOneMenu value="#{beanCajas.caja.estado}">                                
+                    <f:selectItem itemLabel = "C-CERRADO" 
+                                  itemValue = "C"/>                                   
+                    <f:selectItem itemLabel = "I-INACTIVO" 
+                                  itemValue = "I"/>                                
+                </p:selectOneMenu>                                               
+                <h:outputText value="Punto Emision"/>
+                <p:inputText value="#{beanCajas.caja.puntoEmision}" 
+                             maxlength="3" 
+                             onkeyup="this.value = fn_ingresar_numeros(value);"
+                             required="true"
+                             requiredMessage="Debe Ingresar Punto Emision"
+                             />
+                <h:outputText value="Sucursal:"/>
+                <p:selectOneMenu value="#{beanCajas.caja.idSucursal}" converter="omnifaces.SelectItemsConverter"
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{beanSucursales.listarSucursales()}" 
+                                   var="co" 
+                                   itemLabel="#{co.idSucursal}-#{co.descripcion}" 
+                                   itemValue="#{co}" />   
+                </p:selectOneMenu>                            
+                <b:commandButton value='Grabar'
+                                 iconAwesome="fa-save"
+                                 actionListener="#{beanCajas.Grabar()}"
+                                 update=":formNuevoCajas"
+                                 look="success"/>
+                <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 oncomplete="PF('digNuevoCajas').hide()"
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 update="@none"/>
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog widgetVar="digEditarBorrarCajas"
+              header="Modificar/Borrar Cajas"
+              modal="true"
+              id="digEditarBorrarCajas">
+        <h:form id="formEditarBorrarCajas">
+            <p:messages/>
+            <p:panelGrid columns="2">
+                <h:outputText value="Codigo:"/>
+                <p:inputText readonly="true"
+                             value="#{beanCajas.caja.idCaja}"
+                             />
+                <h:outputText value="Estado:"/>
+                <p:selectOneMenu value="#{beanCajas.caja.estado}">                                
+                    <f:selectItem itemLabel = "C-CERRADO" 
+                                  itemValue = "C"/>                                 
+                    <f:selectItem itemLabel = "I-INACTIVO" 
+                                  itemValue = "I"/>                                
+                </p:selectOneMenu>                                               
+                <h:outputText value="Punto Emision"/>
+                <p:inputText value="#{beanCajas.caja.puntoEmision}" 
+                             maxlength="3" 
+                             onkeyup="this.value = fn_ingresar_numeros(value);"
+                             required="true"
+                             requiredMessage="Debe Ingresar Punto Emision"
+                             />
+                <h:outputText value="Sucursal:"/>
+                <p:selectOneMenu value="#{beanCajas.caja.idSucursal}" converter="omnifaces.SelectItemsConverter"
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{beanSucursales.listarSucursales()}" 
+                                   var="co" 
+                                   itemLabel="#{co.idSucursal}-#{co.descripcion}" 
+                                   itemValue="#{co}" />  
+                </p:selectOneMenu>                             
+                <b:commandButton value='Modificar'
+                                 icon='ui-icon-disk'
+                                 actionListener="#{beanCajas.Editar()}"
+                                 update=":formEditarBorrarCajas"
+                                 iconAwesome="fa-edit"
+                                 look="primary"/>
+                <b:commandButton value='Borrar'
+                                 icon='ui-icon-trash'
+                                 actionListener="#{beanCajas.Borrar()}"
+                                 look="warning"
+                                 iconAwesome="fa-trash"
+                                 />                            
+                <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 oncomplete="PF('digEditarBorrarCajas').hide()"
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 update="@none"
+                                 />
+            </p:panelGrid>
+        </h:form>    
+    </p:dialog>
+
+    <p:dialog widgetVar="digReporteCajas"
+              header="Reporte"
+              modal="true"
+              id="digReporteCajas">
+        <h:form id="formReporteCajas">
+            <p:panelGrid columns="2">
+                <h:outputText value="Estado:"/>
+                <p:selectOneMenu value="#{beanCajas.estado}">                                
+                    <f:selectItem itemLabel = "T-TODOS" 
+                                  itemValue = ""/>                                 
+                    <f:selectItem itemLabel = "C-CERRADO" 
+                                  itemValue = "C"/>                                 
+                    <f:selectItem itemLabel = "I-INACTIVO" 
+                                  itemValue = "I"/>       
+                    <f:selectItem itemLabel = "A-ABIERTO" 
+                                  itemValue = "A"/>                                 
+                </p:selectOneMenu>
+                <h:outputText value="Sucursal Desde:"/>
+                <p:selectOneMenu value="#{beanCajas.sucursal_d}" 
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel = "0-TODOS" 
+                                  itemValue = ""/>                                 
+                    <f:selectItems value="#{beanSucursales.listarSucursales()}" 
+                                   var="co" 
+                                   itemLabel="#{co.idSucursal}-#{co.descripcion}" 
+                                   itemValue="#{co.idSucursal}" />
+                </p:selectOneMenu> 
+                <h:outputText value="Sucursal Hasta:"/>
+                <p:selectOneMenu value="#{beanCajas.sucursal_h}" 
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel = "0-TODOS" 
+                                  itemValue = ""/>                                 
+                    <f:selectItems value="#{beanSucursales.listarSucursales()}" 
+                                   var="co" 
+                                   itemLabel="#{co.idSucursal}-#{co.descripcion}" 
+                                   itemValue="#{co.idSucursal}" />                                  
+                </p:selectOneMenu>                              
+                <b:commandButton value='Imprimir'
+                                 id="imprimir"
+                                 actionListener="#{beanCajas.Reporte()}" 
+                                 ajax="false"
+                                 iconAwesome="fa-print"
+                                 look="primary"
+                                 onclick="target = '_blank'" /> 
+                <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 oncomplete="PF('digReporteCajas').hide()"
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 update="@none"
+                                 />                    
+            </p:panelGrid>                    
+        </h:form>
+    </p:dialog>  
+    <!-- Cajas -->
+    <!-- Cargos -->
+    <p:dialog widgetVar="digNuevoCargos"
+              header="Agregar Cargos"
+              modal="true"
+              id="digNuevoCargos">
+        <h:form id="formNuevoCargos">     
+            <p:messages/>
+            <p:panelGrid columns="2">                            
+                <h:outputText value="Codigo:"/>
+                <p:inputText readonly="true"
+                             value="#{beanCargos.cargo.idCargo}"
+                             />                       
+                <h:outputText value="Descripcion:"/>
+                <p:inputText value="#{beanCargos.cargo.descripcion}" 
+                             maxlength="20" 
+                             onkeyup="this.value = fn_ingresar_numeros_letras(value)"
+                             required="true"
+                             requiredMessage="Debe Ingresar Descripcion"
+                             />                            
+                <b:commandButton value='Grabar'
+                                 icon='ui-icon-disk'
+                                 actionListener="#{beanCargos.Grabar()}"
+                                 update=":formNuevoCargos"
+                                 iconAwesome="fa-save"
+                                 look="success"/>
+                <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 oncomplete="PF('digNuevoCargos').hide()"
+                                 update="@none"/>
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+    <p:dialog widgetVar="digEditarBorrarCargos"
+              header="Modificar/Borrar Cargos"
+              modal="true"
+              id="digEditarBorrarCargos">
+        <h:form id="formEditarBorrarCargos">
+            <p:messages/>
+            <p:panelGrid columns="2">
+                <h:outputText value="Codigo:"/>
+                <p:inputText readonly="true"
+                             value="#{beanCargos.cargo.idCargo}"/>
+                <h:outputText value="Descripcion:"/>
+                <p:inputText value="#{beanCargos.cargo.descripcion}" 
+                             maxlength="20" 
+                             onblur="value = value.toUpperCase()"
+                             required="true"
+                             requiredMessage="Debe Ingresar Descripcion"                                         
+                             />
+                <b:commandButton value='Modificar'
+                                 icon='ui-icon-disk'
+                                 actionListener="#{beanCargos.Editar()}"
+                                 update=":formEditarBorrarCargos"
+                                 iconAwesome="fa-edit"
+                                 look="primary"/>
+                <b:commandButton value='Borrar'
+                                 icon='ui-icon-trash'
+                                 actionListener="#{beanCargos.Borrar()}"
+                                 look="warning"
+                                 iconAwesome="fa-trash"
+                                 />                            
+                <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 oncomplete="PF('digEditarBorrarCargos').hide()"
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 update="@none"/>
+            </p:panelGrid>
+        </h:form>    
+    </p:dialog>
+    <p:dialog
+        widgetVar="digReporteCargos"
+        id="digReporteCargos"
+        modal="true">
+        <h:form id="formReporteCargos">
+            <b:commandButton value='Imprimir'
+                             id="imprimir"
+                             actionListener="#{beanCargos.Reporte()}" 
+                             ajax="false"
+                             iconAwesome="fa-print"
+                             look="primary"
+                             onclick="target = '_blank'" /> 
+            <b:commandButton value='Cancelar'
+                             icon='ui-icon-close'
+                             oncomplete="PF('digReporteCargos').hide()"
+                             look="danger"
+                             iconAwesome="fa-reply"
+                             update="@none"
+                             />              
+        </h:form>
+    </p:dialog> 
+    <!-- Cargos -->
+</ui:composition>

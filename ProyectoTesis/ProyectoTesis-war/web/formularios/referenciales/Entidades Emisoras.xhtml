@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>EntidadesEmisoras</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido"> 
+        <h:form id="formEntidadesEmisoras">
+            <p:dataTable id="tbEntidadesEmisoras"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,15"
+                         value="#{beanEntidadesEmisoras.listarEntidadesEmisoras()}"
+                         var="suc"
+                         selection="#{beanEntidadesEmisoras.entidademisora}"
+                         selectionMode="single"
+                         rowKey="#{suc.idEntidadEmisora}"
+                         emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarBorrarEntidadesEmisoras').show()" 
+                        update=":formEditarBorrarEntidadesEmisoras"/>
+                <p:column headerText="Codigo" 
+                          sortBy="#{suc.idEntidadEmisora}" 
+                          filterBy="#{suc.idEntidadEmisora}" 
+                          filterMatchMode="contains"
+                          width="120">
+                    <h:outputText value="#{suc.idEntidadEmisora}"/>
+                </p:column>
+                <p:column headerText="Descripcion"
+                          sortBy="#{suc.descripcion}" 
+                          filterBy="#{suc.descripcion}" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{suc.descripcion}"/>
+                </p:column>
+                 <p:column headerText="Estado"
+                           sortBy="#{suc.estado}" 
+                           filterBy="#{suc.estado}" 
+                          filterMatchMode="contains">
+                     <h:outputText value="#{suc.estado}"/>
+                 </p:column>
+                 <p:column headerText="Direccion"
+                           sortBy="#{suc.direccion}" 
+                           filterBy="#{suc.direccion}" 
+                          filterMatchMode="contains">
+                     <h:outputText value="#{suc.direccion}"/>
+                 </p:column>
+                 <p:column headerText="Telefono"
+                           sortBy="#{suc.telefono}" 
+                           filterBy="#{suc.telefono}" 
+                          filterMatchMode="contains">
+                     <h:outputText value="#{suc.telefono}"/>
+                </p:column>
+                <p:column headerText="Email"
+                          sortBy="#{suc.email}" 
+                          filterBy="#{suc.email}" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{suc.email}"/>
+                </p:column>
+                <p:column width="50">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                            
+                </p:column>   
+
+                <f:facet name="header">
+                    <h1 id="title" >EntidadesEmisoras</h1>
+                    <b:commandButton value="Nuevo"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoEntidadesEmisoras').show()"
+                                     actionListener="#{beanEntidadesEmisoras.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formNuevoEntidadesEmisoras"/>
+                    <b:commandButton value="Reporte"
+                                     icon="ui-icon-print"
+                                     onclick="document.getElementById('formReporteEntidadesEmisoras:imprimir').click()"
+                                     look="primary"
+                                     iconAwesome="fa-print"
+                                     update=":formEntidadesEmisoras"/>                                 
+                    <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formEntidadesEmisoras')}"
+                                     update=":formEntidadesEmisoras"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />  
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

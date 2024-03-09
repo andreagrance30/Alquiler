@@ -1,0 +1,68 @@
+
+.ui-menuitem-text{
+    text-align: left;
+}
+.ui-panelgrid .ui-panelgrid-cell {
+    border-style: none !important;
+    border-collapse: inherit !important;
+    text-align: left;
+}
+
+.ui-widget-content{
+    font-size: small;
+    border-style: none !important;
+    text-align: center;
+    background-color: #ffffff57;
+}
+.ui-layout-center .ui-layout-unit-content {
+    background-image: url('/ProyectoTesis-war/faces/javax.faces.resource/img/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    /*margin-right: 200px;*/
+}
+.ui-layout-north {
+    z-index: 20 !important;
+    overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+
+.ui-menu.ui-menubar{
+    background-image: linear-gradient(to bottom, #ffffff, #86bce14a) !important;
+
+}
+.ui-menuitem-text{
+    font-weight: bold !important;
+}
+.ui-widget-header{
+    background: #86bce14a;
+}
+#title{
+    font-size: 30px;
+    font-weight: bold !important;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+div[id="formPrincipal:gError_container"] > div {
+    background-color: red !important;
+    background-image: -webkit-linear-gradient(top, red, red);
+}
+
+div[id="formPrincipal:gWarning_container"] > div{
+    background-color: orange !important;
+    background-image: -webkit-linear-gradient(top, orange, orange);
+}
+
+div[id="formPrincipal:gInfo_container"] > div{
+    background-color: green !important;
+    background-image: -webkit-linear-gradient(top, green, green);
+}
+.ui-growl-image-info{
+    /*Para los iconos 32x32 */
+ background: url('/ProyectoTesis-war/faces/javax.faces.resource/img/listo.png') !important;
+}
+.ui-paginator.ui-paginator-top.ui-widget-header,.ui-paginator.ui-paginator-bottom.ui-widget-header{
+    background-color: #f3f3f3 !important;
+}

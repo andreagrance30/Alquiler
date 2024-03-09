@@ -1,0 +1,44 @@
+<!-- Agregar Producto -->
+                <p:dialog widgetVar="digAgregarProductoVentas" 
+                          header="Agregar Productos" 
+                          closable="false"
+                          modal="true">
+                    <h:form id="formAgregarProductoVentas"
+                            onkeypress="if (event.keyCode === 13) { return false; }">
+                        <p:messages/>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Producto:"/>
+                            <p:selectOneMenu value="#{beanVentas.ventadet.stock}" converter="omnifaces.SelectItemsConverter"
+                                             filter="true" 
+                                             filterMatchMode="contains"
+                                             widgetVar="stock"
+                                             id="stock"
+                                             >
+                                <f:selectItems value="#{beanStock.listarStockPorDeposito()}" 
+                                               var="st" 
+                                               itemLabel=" #{st.depositos.descripcion} #{st.productos.idProducto} - #{st.productos.descripcion} #{st.productos.precioVenta}" 
+                                               itemValue="#{st}" />
+                            </p:selectOneMenu>      
+                            <h:outputText value="Cantidad"/>
+                            <p:inputText value="#{beanVentas.ventadet.cantidad}" 
+                                         maxlength="5" 
+                                         onblur="value = value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Cantidad"                                          
+                                         onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         /> 
+                            <b:commandButton value='Aceptar'
+                                 iconAwesome="fa-save"
+                                 actionListener="#{beanVentas.AgregaProducto()}"
+                                 update=":formAgregarProductoVentas"
+                                 look="success"/>
+                             <b:commandButton value='Cancelar'
+                                 icon='ui-icon-close'
+                                 oncomplete="PF('digAgregarProductoVentas').hide()"
+                                 look="danger"
+                                 iconAwesome="fa-reply"
+                                 update="@none"/>
+                        </p:panelGrid>                       
+                    </h:form>
+                </p:dialog>
+                           

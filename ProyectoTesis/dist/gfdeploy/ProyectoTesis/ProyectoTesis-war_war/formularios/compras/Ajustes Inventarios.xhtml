@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Ajustes Inventario</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <h:form id="formAjustesInventarios">
+          <p:dataTable id="tbAjustesInventarios"
+                           paginator="true"
+                           rows="10"
+                           rowsPerPageTemplate="5,10,15"
+                           value="#{beanAjustesInventarios.listarAjustesInventarios()}"
+                           var="suc"
+                           selection="#{beanAjustesInventarios.ajusteinventario}"
+                           rowKey="#{suc}"
+                           resizableColumns="true"
+                           selectionMode="single"
+                           emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="PF('digEditarBorrarAjustes').show()" 
+                                    update=":formEditarBorrarAjustes"/>                            
+                            <p:column headerText="Codigo" 
+                                      width="40">
+                                <h:outputText value="#{suc.idAjusteInventario}"/>
+                            </p:column>
+                            <p:column headerText="Motivo">
+                                <h:outputText value="#{suc.motivo}"/>
+                            </p:column>                            
+                            <p:column headerText="Existencia Fisica">
+                                <h:outputText value="#{suc.existenciaFisica}"/>
+                            </p:column>          
+                            <p:column headerText="Existencia Teorica">
+                                <h:outputText value="#{suc.existenciaTeorica}"/>
+                            </p:column>                            
+                            <p:column headerText="Producto">
+                                <h:outputText value="#{suc.stock.productos.idProducto}-#{suc.stock.productos.descripcion}"/>
+                            </p:column>   
+                            <p:column headerText="Deposito">
+                                <h:outputText value="#{suc.stock.depositos.idDeposito}-#{suc.stock.depositos.descripcion}"/>
+                            </p:column>                           
+                            <p:column width="2%">                                         
+                                <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>      
+                                <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center"/>
+                            </p:column>
+                              <f:facet name="header">
+                    <h1 id="title" >Ajustes Inventario</h1>
+                            <b:commandButton value="Nuevo"
+                                             iconAwesome="fa-plus-circle"
+                                             oncomplete="PF('digNuevoAjustes').show()"
+                                             actionListener="#{beanAjustesInventarios.Nuevo()}" 
+                                             look="success"
+                                             update=":formNuevoAjustes"/>
+                            <b:commandButton value="Reporte"
+                                             iconAwesome="fa-print"                                     
+                                             oncomplete="PF('digReporteAjustes').show()"
+                                             look="primary"
+                                             update=":formAjustesInventarios"/> 
+                             <b:commandButton value="Inicio"
+                                     iconAwesome="fa-home"
+                                     actionListener="#{Metodos.Menu('formAjustesInventarios')}"
+                                     update=":formAjustesInventarios"
+                                     look="info"
+                                     />
+                            </f:facet>
+                        </p:dataTable>
+        </h:form>               
+    </ui:define>
+</ui:composition>
+

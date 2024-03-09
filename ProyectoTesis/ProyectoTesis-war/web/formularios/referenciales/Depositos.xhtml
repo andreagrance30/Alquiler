@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Depositos</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido"> 
+        <h:form id="formDepositos">
+            <p:dataTable id="tbDepositos"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,15"
+                         value="#{beanDepositos.listarDepositos()}"
+                         var="suc"
+                         selection="#{beanDepositos.deposito}"
+                         selectionMode="single"
+                         rowKey="#{suc.idDeposito}"
+                         emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarBorrarDepositos').show()" 
+                        update=":formEditarBorrarDepositos"/>
+                <p:column headerText="Codigo" 
+                          sortBy="#{suc.idDeposito}" 
+                          filterBy="#{suc.idDeposito}" 
+                          filterMatchMode="contains"
+                          width="120">
+                    <h:outputText value="#{suc.idDeposito}"/>
+                </p:column>
+                <p:column headerText="Descripcion"
+                          sortBy="#{suc.descripcion}" 
+                          filterBy="#{suc.descripcion}" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{suc.descripcion}"/>
+                </p:column>
+                <p:column headerText="Sucursal"
+                          sortBy="#{suc.idSucursal.idSucursal.toString()}-#{suc.idSucursal.descripcion}" 
+                          filterBy="#{suc.idSucursal.idSucursal.toString()}-#{suc.idSucursal.descripcion}" 
+                          filterMatchMode="contains"
+                          >
+                    <h:outputText value="#{suc.idSucursal.idSucursal.toString()}-#{suc.idSucursal.descripcion}"/>
+                </p:column> 
+                <p:column width="50">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                            
+                </p:column>   
+
+                <f:facet name="header">
+                    <h1 id="title" >Depositos</h1>
+                    <b:commandButton value="Nuevo"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoDepositos').show()"
+                                     actionListener="#{beanDepositos.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formNuevoDepositos"/>
+                    <b:commandButton value="Reporte"
+                                     icon="ui-icon-print"
+                                     onclick="document.getElementById('formReporteDepositos:imprimir').click()"
+                                     look="primary"
+                                     iconAwesome="fa-print"
+                                     update=":formDepositos"/>                                 
+                    <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formDepositos')}"
+                                     update=":formDepositos"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />  
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

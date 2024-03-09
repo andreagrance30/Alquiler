@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <!--<h:outputStylesheet name="./css/default.css"/>-->
+        <!--<h:outputStylesheet name="./css/cssLayout.css"/>-->
+        <h:outputStylesheet name="css/menuprincipal.css" />  
+        <h:outputScript name="js/calendar_lenguaje.js" />
+        <h:outputScript name="js/funciones.js" />
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.png']}"/>
+        <ui:insert name="head">
+            <f:facet name="first">
+                <title>Menu Principal</title>
+            </f:facet>
+        </ui:insert>            
+    </h:head>
+
+    <h:body>   
+        <p:layout fullPage="true">
+            <p:layoutUnit position="north" size="50" resizable="false" closable="false" collapsible="true" >                
+                <h:form id="formPrincipal"> 
+                    <p:growl id="gError" life="3000" severity="error" />
+                    <p:growl id="gInfo" life="3000" severity="info" />
+                    <p:growl id="gWarning" life="3000" severity="warn"/>
+                    <p:menubar >    
+                        <p:submenu label="Referenciales">
+                            <p:menuitem value="Cajas" url="/faces/formularios/referenciales/Cajas.xhtml?faces-redirect=true" update=":formCajas" ></p:menuitem>
+                            <p:menuitem value="Cargos" url="/faces/formularios/referenciales/Cargos.xhtml?faces-redirect=true" update=":formCargos"></p:menuitem>
+                            <p:menuitem value="Clasificaciones" url="/faces/formularios/referenciales/Clasificaciones.xhtml?faces-redirect=true" update=":formClasificaciones"></p:menuitem>
+                            <p:menuitem value="Condiciones" url="/faces/formularios/referenciales/Condiciones.xhtml?faces-redirect=true" update=":formCondiciones"></p:menuitem>
+                            <p:menuitem value="Depositos" url="/faces/formularios/referenciales/Depositos.xhtml?faces-redirect=true" update=":formDepositos"></p:menuitem>
+                            <p:menuitem value="Entidades Emisoras" url="/faces/formularios/referenciales/Entidades Emisoras.xhtml?faces-redirect=true" update=":formEntidadesEmisoras"></p:menuitem>
+                            <p:menuitem value="Impuestos" url="/faces/formularios/referenciales/Impuestos.xhtml?faces-redirect=true" update=":formImpuestos"></p:menuitem>
+                            <p:menuitem value="Productos" url="/faces/formularios/referenciales/Productos.xhtml?faces-redirect=true" update=":formProductos"></p:menuitem>
+                             <p:menuitem value="Proveedores" url="/faces/formularios/referenciales/Proveedores.xhtml?faces-redirect=true" update=":formProveedores"></p:menuitem>
+                            <p:menuitem value="Roles" url="/faces/formularios/referenciales/Roles.xhtml?faces-redirect=true" update=":formRoles"></p:menuitem>
+                            <p:menuitem value="Stock" url="/faces/formularios/referenciales/Stock.xhtml?faces-redirect=true" update=":formStock"></p:menuitem>
+                            <p:menuitem value="Sucursales" url="/faces/formularios/referenciales/Sucursales.xhtml?faces-redirect=true" update=":formSucursales"></p:menuitem>
+                            <p:menuitem value="Terminales" url="/faces/formularios/referenciales/Terminales.xhtml?faces-redirect=true" update=":formTerminales"></p:menuitem>
+                            <p:menuitem value="Tipos Arqueos" url="/faces/formularios/referenciales/Tipos Arqueos.xhtml?faces-redirect=true" update=":formTiposArqueos"></p:menuitem>
+                            <p:menuitem value="Tipos Cheques" url="/faces/formularios/referenciales/Tipos Cheques.xhtml?faces-redirect=true" update=":formTiposCheques"></p:menuitem>                         
+                            <p:menuitem value="Tipos Personas" url="/faces/formularios/referenciales/Tipos Personas.xhtml?faces-redirect=true" update=":formTiposPersonas"></p:menuitem>
+                            <p:menuitem value="Transacciones Comerciales" url="/faces/formularios/referenciales/Transacciones Comerciales.xhtml?faces-redirect=true" update=":formTransaccionesComerciales"></p:menuitem>
+                            <p:menuitem value="Tipos de Comprobantes" url="/faces/formularios/referenciales/Tipos Comprobantes.xhtml?faces-redirect=true" update=":formTiposComprobantes"></p:menuitem>
+                           <p:menuitem value="Tarjetas" url="/faces/formularios/referenciales/Tarjetas.xhtml?faces-redirect=true" update=":formTarjetas"></p:menuitem>
+                           <p:menuitem value="Clientes" url="/faces/formularios/referenciales/Clientes.xhtml?faces-redirect=true" update=":formClientes"></p:menuitem>
+                           <p:menuitem value="Timbrados" url="/faces/formularios/referenciales/Timbrados.xhtml?faces-redirect=true" update=":formTimbrados"></p:menuitem>
+                           <p:menuitem value="Personas" url="/faces/formularios/referenciales/Personas.xhtml?faces-redirect=true" update=":formPersonas"></p:menuitem>
+                           <p:menuitem value="Empleados" url="/faces/formularios/referenciales/Empleados.xhtml?faces-redirect=true" update=":formEmpleados"></p:menuitem>
+                        </p:submenu>
+                        <p:submenu label="Ventas">
+                            <p:menuitem value="Apertura Cierre Caja" url="/faces/formularios/ventas/Apertura Cierre.xhtml?faces-redirect=true" update=":formAperturaCierreCaja"></p:menuitem>
+                            <p:menuitem value="Arqueos Cajas" url="/faces/formularios/ventas/Arqueos Cajas.xhtml?faces-redirect=true" update=":formArqueosCajas"></p:menuitem>
+                            <p:menuitem value="Ventas" url="/faces/formularios/ventas/Ventas.xhtml?faces-redirect=true" update=":formArqueosCajas"></p:menuitem>
+                            <p:menuitem value="Cobros" url="/faces/formularios/ventas/Cobros.xhtml?faces-redirect=true" update=":formCobros"></p:menuitem>
+                        </p:submenu>
+                        <p:submenu label="Compras">
+                            <p:menuitem value="Pedidos" url="/faces/formularios/referenciales/Pedidos2.xhtml?faces-redirect=true" update=":formPedidos2" ></p:menuitem>
+                            <p:menuitem value="Presupuestos" url="/faces/formularios/compras/Presupuestos.xhtml?faces-redirect=true" update=":formPresupuestos"></p:menuitem>     
+                            <p:menuitem value="Orden de Compra" url="/faces/formularios/compras/Ordenes Compras.xhtml?faces-redirect=true" update=":formOrdenesCompras"></p:menuitem>
+                            <p:menuitem value="Compras" url="/faces/formularios/compras/Compras.xhtml?faces-redirect=true" update=":formCompras"></p:menuitem> 
+                          <p:menuitem value="Ajustes de Inventario" url="/faces/formularios/compras/Ajustes Inventarios.xhtml?faces-redirect=true" update=":formAjustesInventarios"></p:menuitem> 
+                        </p:submenu>  
+                        <p:submenu label="Alquiler">
+                             <p:menuitem value="Presupuesto del Cliente">  </p:menuitem>
+                              <p:menuitem value="Solicitud del Cliente">  </p:menuitem>
+                               <p:menuitem value="Orden de Trabajo">  </p:menuitem>
+                        </p:submenu> 
+                        <p:submenu label="Ayuda">
+                            <p:menuitem  value="Ayuda" url="Ayuda.pdf"></p:menuitem>
+                        </p:submenu>
+                        <f:facet name="options">
+                            <p:outputLabel value="Usuario:" />
+                            <p:inputText readonly="true" value="#{beanPrincipal.usuario}"/>
+                            <p:outputLabel value="Sucursal:" />
+                            <p:inputText readonly="true" value="#{beanPrincipal.sucursal}"/>                            
+                            <b:commandButton tooltip="Cerrar Session"
+                             iconAwesome="fa-chain-broken"
+                             actionListener="#{Metodos.Salir('formPrincipal')}"
+                             look="danger"                                     
+                             />
+                        </f:facet>
+                    </p:menubar>   
+                </h:form>     
+            </p:layoutUnit>
+
+            <!--<p:layoutUnit position="south" size="100" header="Bottom" resizable="true" closable="true" collapsible="true">
+                <h:outputText value="South unit content." />
+            </p:layoutUnit>-->
+
+            <p:layoutUnit header ="Fecha y Hora" position="west" size="240"  resizable="false" collapsible="true">                        
+                <p:calendar mode="inline"  locale="es" />
+                <p:clock pattern="HH:mm:ss dd/MM/yyyy" />
+            </p:layoutUnit>
+
+            <!--<p:layoutUnit position="east" size="200" header="Right" resizable="true" closable="true" collapsible="true" effect="drop">
+                <h:outputText value="Right unit content." />
+            </p:layoutUnit>-->
+
+            <p:layoutUnit position="center" id="center">
+                <ui:insert name="title">
+                    
+                </ui:insert>
+                <ui:insert name="contenido">
+                   
+                </ui:insert>  
+            </p:layoutUnit>
+            <ui:insert name="Dialogos_Andrea">
+                <ui:include src="/plantillas/Dialogos_Andrea.xhtml"/>
+            </ui:insert>
+        </p:layout>
+
+    </h:body>
+
+</html>
