@@ -1,0 +1,41 @@
+body{
+    background-color: rgb(221 221 221) !important;
+}
+.ui-layout-unit{
+    font-size: small;
+    text-align: left;
+}
+.ui-datepicker{
+    font-size: small;
+}
+.ui-layout-unit-header{
+    text-align: center; 
+}
+.ui-panel{
+    margin-left: auto;
+    margin-right: auto;
+    font-size: small;
+    text-align: left;
+}
+.ui-panelgrid, .ui-panelgrid-cell{
+    border-style: none !important;
+    border-collapse: inherit !important;
+    text-align: left; 
+}
+.ui-dialog{
+    /*text-align: center; */
+    font-size: small;
+}
+.ui-fieldset{
+    font-size: small;
+    text-align: left;
+}
+.ui-selectonemenu-items-wrapper, .ui-selectonemenu-filter, .ui-growl-item{
+    font-size: small;
+}
+.ui-selectonemenu-filter-container {
+    width: 100% !important;
+    font-size: small;
+}
+ 
+

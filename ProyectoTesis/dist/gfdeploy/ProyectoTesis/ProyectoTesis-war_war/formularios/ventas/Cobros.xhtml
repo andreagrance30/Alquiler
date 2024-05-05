@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Cobros</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">       
+         <f:facet name="header">
+            <h1 id="title" >Cobros</h1>
+        </f:facet>
+                    <h:form id="formCobros">   
+                                <h:panelGrid columns="2" >
+                                    <h:outputText value="Nro Recibo:"/>
+                                    <p:inputText value="#{beanCobros.cobro.nroRecibo}"
+                                                 readonly="true">
+                                        <f:convertNumber/>
+                                    </p:inputText>
+                                    <h:outputText value="Cliente:"/>
+                                    <p:selectOneMenu value="#{beanCobros.cliente}" converter="omnifaces.SelectItemsConverter"
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     widgetVar="cliente"
+                                                     id="cliente"
+                                                     style="width: 650px;"
+                                                     >
+                                        <p:ajax event="change" listener="#{beanCobros.AceptarClientes()}" />
+                                        <f:selectItem itemValue=""
+                                                      itemLabel=""/>
+                                        <f:selectItems value="#{beanClientes.listarClientes()}" 
+                                                       var="im" 
+                                                       itemLabel="Cod.: #{im.idCliente} - Nombre: #{im.personas.primerNombre} #{im.personas.segundoNombre} #{im.personas.primerApellido} #{im.personas.segundoApellido} - Ruc: #{im.personas.ruc} - C.I: #{im.personas.cedulaIdentidad}" 
+                                                       itemValue="#{im}" />   
+                                    </p:selectOneMenu> 
+                                    <h:outputText value="Condicion:"/>
+                                    <p:selectOneMenu value="#{beanCobros.condicion}" converter="omnifaces.SelectItemsConverter"
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     widgetVar="condicion"
+                                                     id="condicion">
+                                        <p:ajax event="change" listener="#{beanCobros.AceptarClientes()}" />
+                                        <f:selectItem itemValue=""
+                                                      itemLabel=""/>
+                                        <f:selectItems value="#{beanCondiciones.listarCondiciones()}" 
+                                                       var="con" 
+                                                       itemLabel="#{con.idCondicion} - #{con.descripcion} #{con.intervaloDias}"  
+                                                       itemValue="#{con}" />   
+                                    </p:selectOneMenu>                                    
+                                </h:panelGrid> 
+                          
+                                <p:panelGrid columns="5">
+                                    <p:commandButton value="Grabar" 
+                                                     actionListener="#{beanCobros.Grabar()}" 
+                                                     icon="ui-icon-disk"/>                                                     
+                                    <p:commandButton value="Revertir" 
+                                                     icon="ui-icon-closethick"/>                                       
+                                    <p:commandButton value="Cancelar" 
+                                                     actionListener="#{beanCobros.Nuevo()}"
+                                                     icon="ui-icon-trash"/>
+                                    <p:commandButton value="Inicio" 
+                                                     actionListener="#{beanCobros.Menu()}" 
+                                                     icon="ui-icon-home"/>
+                                    <p:commandButton value="Salir"
+                                                 icon="ui-icon-circle-close"
+                                                 actionListener="#{beanCobros.Salir()}"/> 
+                                </p:panelGrid>
+                       
+                    </h:form>                      
+                    <h:form id="formCuentasCobrar">                        
+                        <p:dataTable id="dtCuentasCobrar"
+                                     value="#{beanCobros.listarCuentasCobrarPendientes()}"
+                                     var="ctasc"
+                                     paginator="true"     
+                                     rows="4"
+                                     selection="#{beanCobros.cuentacobrar}"
+                                     sortOrder="ASCENDING"
+                                     sortBy="#{ctasc.cuentaCobrar.idCuentaCobrar}"
+                                     rowKey="#{ctasc}"                                     
+                                     resizableColumns="true"
+                                     selectionMode="single"
+                                     emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="#{beanCobros.condicion.idCondicion != 1}? PF('digEditarCuentasCobrar').show() : null" 
+                                    update=":formEditarCuentasCobrar"/>                            
+                            <p:column headerText="Codigo"                                          
+                                      style="width:15px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.idCuentaCobrar}"/>
+                            </p:column>
+                            <p:column headerText="Nro Cuota"
+                                      style="width:25px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.cuota}"/>
+                            </p:column>
+                            <p:column headerText="Nro Comprobante"                                          
+                                      style="width:60px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.idVenta.nroComprobante}"/>
+                            </p:column>
+                            <p:column headerText="Importe"                                         
+                                      style="width:40px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.importe}" >
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Interes"
+                                      style="width:40px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.interes}" >
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Venc."
+                                      style="width:35px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.vencCuota}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Condicion"
+                                      style="width:35px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.idVenta.idCondicion.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Saldo" resizable="false"
+                                      style="width:40px;">
+                                <h:outputText value="#{ctasc.cuentaCobrar.saldo}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>                 
+                            <p:column width="2%" resizable="false">
+                                <p:selectBooleanCheckbox value="#{ctasc.seleccionado}" >
+                                    <p:ajax event="valueChange" 
+                                            listener="#{beanCobros.SumarSeleccionados()}"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <p:column width="3%">                                         
+                                    <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>                                                                             
+                            </p:column>                                             
+                            <f:facet name="header">
+                                <h:outputText value="Cuentas a Cobrar" />
+                            </f:facet>                            
+                        </p:dataTable>
+                        
+                        <h:panelGrid columns="4" 
+                                     style="border-color: transparent"
+                                     id="totales">
+                            <h:outputText value="Total Seleccionado" />
+                            <p:inputText  value="#{beanCobros.totalseleccionado}" 
+                                          id="txtTotalSeleccionado" 
+                                          readonly="true"
+                                          size="20">
+                                <f:convertNumber />
+                            </p:inputText>
+                            <h:outputText value="Interes" />
+                            <p:inputText value="#{beanCobros.intereses}" 
+                                         id="txtInteres" 
+                                         readonly="true">
+                                <f:convertNumber />
+                            </p:inputText>
+                            <h:outputText value="Total a Pagar" />
+                            <p:inputText value="#{beanCobros.totalpagar}" 
+                                         id="txtPagar" 
+                                         readonly="true">
+                                <f:convertNumber />
+                            </p:inputText>
+                            <h:outputText value="Vuelto" />
+                            <p:inputText value="#{beanCobros.vuelto}" 
+                                         id="txtVuelto" 
+                                         readonly="true">
+                                <f:convertNumber />
+                            </p:inputText>
+                            <p:commandButton value="Formas de Cobros" 
+                                             icon="ui-icon-transfer-e-w"
+                                             actionListener="#{beanCobros.AceptarFormaCobro()}"/>                                
+                        </h:panelGrid>
+                    </h:form>
+        
+   
+                    <h:form id="formCobroForma">
+                        <h:panelGrid>       
+                            <p:dataTable id="dtCobroForma"
+                                         value="#{beanCobros.listarCobrosFormasDet()}"
+                                         var="detcf"
+                                         rows="3"
+                                         selectionMode="single"
+                                         selection="#{beanCobros.cobroformadet}"
+                                         rowKey="#{detcf.transaccionesComerciales}"
+                                         paginator="true"
+                                         rowsPerPageTemplate="10"
+                                         resizableColumns="true"
+                                         emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        listener="#{beanCobros.EliminarEfectivo()}"/>
+                                <p:column headerText="Codigo" >
+                                    <h:outputText value="#{detcf.transaccionesComerciales.idTransaccionComercial}" />
+                                </p:column>
+                                <p:column headerText="Descripcion" >
+                                    <h:outputText value="#{detcf.transaccionesComerciales.descripcion}" />
+                                </p:column>
+                                <p:column headerText="Monto">
+                                    <h:outputText value="#{detcf.montoDet}" >
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column width="5%">                                             
+                                    <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center"/>
+                                </p:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Efectivo"/>
+                                </f:facet>                                 
+                            </p:dataTable>
+
+                            <p:dataTable id="dtCobroTarjeta"
+                                         value="#{beanCobros.listarCobrosTarjetas()}"
+                                         var="cobTar"
+                                         rows="3"
+                                         selectionMode="single"
+                                         selection="#{beanCobros.cobrotarjeta}"
+                                         rowKey="#{cobTar.idCobroTarjeta}"
+                                         rowsPerPageTemplate="10"
+                                         resizableColumns="true"
+                                         emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        listener="#{beanCobros.EliminarTarjeta()}"/>
+                                <p:column headerText="Tarjeta" width="10%">
+                                    <h:outputText value="#{cobTar.idTarjeta.descripcion}"/>
+                                </p:column>
+                                <p:column headerText="Emisora" width="10%">
+                                    <h:outputText value="#{cobTar.idTarjeta.idEntidadEmisora.descripcion}"/>
+                                </p:column>                                
+                                <p:column headerText="Nro." width="20%" >
+                                    <h:outputText value="#{cobTar.nroTarjeta}"/>
+                                </p:column>
+                                <p:column headerText="Nro Ticket" >
+                                    <h:outputText value="#{cobTar.nroTicket}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Monto" >
+                                    <h:outputText  value="#{cobTar.montoTarjeta}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column width="5%">                                               
+                                    <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center"/>
+                                </p:column>                                
+                                <f:facet name="header">
+                                    <h:outputLabel value="Tarjetas"/>
+                                </f:facet>                                  
+                            </p:dataTable>
+
+                            <p:dataTable id="dtCobroCheque" 
+                                         value="#{beanCobros.listarCobrosCheques()}" 
+                                         var="cobChe"
+                                         rows="3"
+                                         selectionMode="single"
+                                         selection="#{beanCobros.cobrocheque}"
+                                         rowKey="#{cobChe.idCobroCheque}"
+                                         rowsPerPageTemplate="10"
+                                         resizableColumns="true"
+                                         emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        listener="#{beanCobros.EliminarCheque()}"/>
+                                <p:column headerText="Banco" width="8%">
+                                    <h:outputText value="#{cobChe.idEntidadEmisora.descripcion}"/>
+                                </p:column>                              
+                                <p:column headerText="Nro. Cheque" width="14%">
+                                    <h:outputText value="#{cobChe.nroCheque}"/>
+                                </p:column>
+                                <p:column headerText="Tipo" >
+                                    <h:outputText value="#{cobChe.idTipoCheque.descripcion}"/>
+                                </p:column>                                 
+                                <p:column headerText="Fecha Emi." >
+                                    <h:outputText value="#{cobChe.fechaEmision}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Fecha Ret." >
+                                    <h:outputText value="#{cobChe.fechaRetiro}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>  
+                                <p:column width="5%">                                              
+                                    <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center"/>
+                                </p:column>                                
+                                <f:facet name="header">
+                                    <h:outputLabel value="Cheques"/>
+                                </f:facet>                                  
+                            </p:dataTable>
+
+                        </h:panelGrid>
+                    </h:form>
+              
+   </ui:define>
+</ui:composition>

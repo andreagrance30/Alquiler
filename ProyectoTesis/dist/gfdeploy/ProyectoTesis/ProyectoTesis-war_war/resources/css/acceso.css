@@ -1,0 +1,24 @@
+body{
+    background-color:   #85bae175 !important ;
+    background: url("#{resource['img/logo.png']}");
+    background-repeat: no-repeat;
+    background-position: 20% 5%;
+}
+.ui-panel{
+    background-color:   #85bae175 !important ;
+    width: 350px;
+    margin-left: auto;
+    margin-right: 5%;
+    margin-top: 15%;
+    text-align: center; 
+    font-size: small
+}
+
+.ui-dialog{
+    width: 350px;
+    text-align: center; 
+    font-size: small
+}
+.ui-growl-item{
+    font-size: small
+}

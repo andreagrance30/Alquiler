@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <h:outputStylesheet library="css" name="formularios.css" />
+                <title>Tarjetas</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:layout fullPage="True">
+                <p:layoutUnit position="north"
+                              header="Sistema de Control de Alquiler">                    
+                </p:layoutUnit>
+                <p:layoutUnit position="center"
+                              header="Administrar Tarjetas"> 
+                    <h:form id="formTarjetas">
+                        <p:growl id="gTarjetas" life="5000"/>
+                        <p:dataTable id="tbTarjetas"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanTarjetas.listarTarjetas()}"
+                                     var="de"
+                                     selection="#{beanTarjetas.tarjetas}"
+                                     selectionMode="single"
+                                     rowKey="#{de.idTarjeta}">
+                            <p:column headerText="Codigo">
+                                <h:outputText value="#{de.idTarjeta}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{de.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Entidad Emisora">
+                                <h:outputText value="#{de.idEntidadEmisora.descripcion}"/>
+                            </p:column>
+                            <f:facet name="header">
+                                <p:commandButton value="Nuevo"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digNuevo').show()"
+                                                 actionListener="#{beanTarjetas.Nuevo()}" update=":formNuevo"/>
+                                <p:commandButton value="Inicio"
+                                                 icon="ui-icon-home"
+                                                 actionListener="#{beanTarjetas.Menu()}"
+                                                 />
+                                <p:commandButton value="Salir"
+                                                 icon="ui-icon-circle-close"
+                                                 actionListener="#{beanTarjetas.Salir()}"
+                                                 />
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+                
+                <p:dialog widgetVar="digNuevo"
+                          header="Agregar Tarjetas"
+                          id="digNuevo">
+                <h:form id="formNuevo">
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanTarjetas.tarjetas.idTarjeta}"/>
+                            <h:outputText value="Descripcion:"/>
+                            <p:inputText 
+                                value="#{beanTarjetas.tarjetas.descripcion}"/>                            
+                            <h:outputText value="Entidad Emisora:"/>
+                            <p:selectOneMenu value="#{beanTarjetas.entidades}">
+                                <f:selectItems value="#{beanEntidadesEmisoras.listarEntidadesEmisoras()}" var="ar" itemLabel="#{ar.descripcion}" itemValue="#{ar.idEntidadEmisora}" >                                    
+                                </f:selectItems>
+                            </p:selectOneMenu>                             
+                            <p:commandButton value='Grabar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanTarjetas.Grabar()}"/>
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digNuevo').hide()"/>
+                        </p:panelGrid>
+                </h:form>
+                </p:dialog>
+                 <p:dialog widgetVar="digEditarBorrar"
+                          header="Modificar/Borrar Cargos"
+                          id="digEditarBorrar">
+                    <h:form id="formEditarBorrar"
+                            onkeypress="if (event.keyCode === 13) { return false; }">
+                        <p:messages/>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanTarjetas.tarjetas.idTarjeta}"/>
+                            <h:outputText value="Descripcion:"/>
+                            <p:inputText value="#{beanTarjetas.tarjetas.descripcion}" 
+                                         maxlength="20" 
+                                         onblur="value=value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Descripcion"                                         
+                                         />
+                            <h:outputText value="Entidad Emisora:"/>
+                            <p:inputText value="#{beanTarjetas.tarjetas.idEntidadEmisora}" 
+                                         maxlength="20" 
+                                         onblur="value=value.toUpperCase()"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Descripcion"                                         
+                                         />
+                            <p:commandButton value='Modificar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanTarjetas.Editar()}"
+                                             update=":formEditarBorrar"/>
+                            <p:commandButton value='Borrar'
+                                             icon='ui-icon-trash'
+                                             actionListener="#{beanTarjetas.Borrar()}"
+                                             />                            
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digEditarBorrar').hide()"/>
+                        </p:panelGrid>
+                    </h:form>    
+                </p:dialog>
+            </p:layout> 
+        </h:body>
+    </f:view>
+</html>
+

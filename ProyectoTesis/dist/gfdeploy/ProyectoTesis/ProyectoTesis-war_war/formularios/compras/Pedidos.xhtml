@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Pedidos</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <h:form id="formPedidos" >
+        <f:metadata>
+            <f:viewAction action="#{beanPedidos.Inicializa()}" />
+        </f:metadata>
+            <h1 id="title" >Pedidos</h1> 
+            <p:panelGrid columns="2">
+                <h:outputText value="Codigo Pedido: "/>
+                <p:inputText value="#{beanPedidos.pedido.idPedido}"
+                             readonly="true"/>
+                <h:outputText value="Empleado:"/>
+                <p:selectOneMenu value="#{beanPedidos.pedido.idEmpleado}" converter="omnifaces.SelectItemsConverter"
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 widgetVar="empleado"
+                                 id="empleado"
+                                 style="width: 800px;"
+                                 >
+                    <f:selectItems value="#{beanEmpleados.listarEmpleados()}" 
+                                   var="im" 
+                                   itemLabel="Cod.: #{im.idEmpleado} - Nombre: #{im.personas.primerNombre} #{im.personas.segundoNombre} #{im.personas.primerApellido} #{im.personas.segundoApellido} - Cargo: #{im.idCargo.descripcion}" 
+                                   itemValue="#{im}" />   
+                </p:selectOneMenu>                                                        
+            <b:commandButton value="Agregar Producto"
+                             iconAwesome="fa-plus-circle"
+                             oncomplete="PF('digAgregarProductoPedidos').show()"
+                             actionListener="#{beanPedidos.NuevoProducto()}" 
+                             look="success"
+                             update=":formAgregarProductoPedidos"
+                             />
+            </p:panelGrid>                
+            <p:panelGrid columns="1">
+                <p:dataTable id="tbPedidosDet"
+                     paginator="true"
+                     rows="10"
+                     rowsPerPageTemplate="5,10,15"
+                     value="#{beanPedidos.listarPedidosDet()}"
+                     var="ve"
+                     selection="#{beanPedidos.pedidodet}"
+                     selectionMode="single"
+                     rowKey="#{ve.stock}"
+                     emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarProductoPedidos').show()" 
+                        update=":formEditarProductoPedidos"/>
+                <p:ajax event="rowUnselect" update=":formPedidos:tbPedidosDet"/>
+            <p:column headerText="Codigo" 
+                      width="40">
+                <h:outputText value="#{ve.stock.productos.idProducto}"/>
+            </p:column>
+                <p:column headerText="Descripcion">
+                    <h:outputText value="#{ve.stock.productos.descripcion}"/>
+                </p:column>                                           
+                <p:column headerText="Cantidad">
+                    <h:outputText value="#{ve.cantidad}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </p:column> 
+                <p:column width="2%">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                                                              
+                </p:column>                                                            
+                </p:dataTable>
+            </p:panelGrid>
+            <p:panelGrid columns="6">
+                <p:commandButton value='Guardar'
+                                 icon='ui-icon-disk'
+                                 actionListener="#{beanPedidos.Grabar()}" />    
+                <p:commandButton value="Editar"
+                                 icon="ui-icon-newwin"
+                                 oncomplete="PF('digAnularAprobarPedidos').show()"                                                 
+                                 actionListener="#{beanPedidos.Nuevo()}"
+                                 update=":formAnularAprobarPedidos"/>                                                 
+                <p:commandButton value="Cancelar"
+                                 icon="ui-icon-trash"
+                                 update=":formPedidos"
+                                 actionListener="#{beanPedidos.Nuevo()}"/>                                
+                <b:commandButton value="Salir"
+                     iconAwesome="fa-home"
+                     actionListener="#{Metodos.Menu('formPedidos')}"
+                     update=":formPedidos"
+                     look="info"
+                     />                            
+            </p:panelGrid>             
+         </h:form>  
+
+    </ui:define>
+</ui:composition>
+

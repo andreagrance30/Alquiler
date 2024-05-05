@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Tarjetas" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="40" bottomMargin="30" isSummaryWithPageHeaderAndFooter="true" uuid="4d28abbb-8942-4e6c-b6df-785e39aaa129">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Alquiler"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="421"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="565"/>
+	<parameter name="p_usuario" class="java.lang.String"/>
+	<parameter name="p_sucursal" class="java.lang.String"/>
+	<parameter name="p_entidad_desde" class="java.lang.String"/>
+	<parameter name="p_entidad_hasta" class="java.lang.String"/>
+	<parameter name="p_cobro_desde" class="java.lang.Integer"/>
+	<parameter name="p_cobro_hasta" class="java.lang.Integer"/>
+	<parameter name="p_tipo_cheque_desde" class="java.lang.Integer"/>
+	<parameter name="p_tipo_cheque_hasta" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select cc.*
+from cobros_cheques cc, entidades_emisoras e, cobros cob, tipos_cheques tc
+where e.id_entidad_emisora = cc.id_entidad_emisora 
+and cob.id_cobro = cc.id_cobro
+and tc.id_tipo_cheque = cc.id_tipo_cheque
+and (e.descripcion >= $P{p_entidad_desde} or $P{p_entidad_desde} is null)
+and (e.descripcion <= $P{p_entidad_hasta} or $P{p_entidad_hasta} is null)
+and (cc.id_cobro >= $P{p_cobro_desde} or $P{p_cobro_desde} is null)
+and (cc.id_cobro <= $P{p_cobro_hasta} or $P{p_cobro_hasta} is null)
+and (cc.id_tipo_cheque >= $P{p_tipo_cheque_desde} or $P{p_tipo_cheque_desde} is null)
+and (cc.id_tipo_cheque <= $P{p_tipo_cheque_hasta} or $P{p_tipo_cheque_hasta} is null)
+order by cc.id_cobro_cheque]]>
+	</queryString>
+	<field name="id_cobro_cheque" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_cobro_cheque"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_cobro_cheque"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="nro_cheque" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nro_cheque"/>
+		<property name="com.jaspersoft.studio.field.label" value="nro_cheque"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="estado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="estado"/>
+		<property name="com.jaspersoft.studio.field.label" value="estado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="fecha_emision" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_emision"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_emision"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="fecha_retiro" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_retiro"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_retiro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="id_cobro" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_cobro"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_cobro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="id_entidad_emisora" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_entidad_emisora"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_entidad_emisora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<field name="id_tipo_cheque" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_tipo_cheque"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_tipo_cheque"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobros_cheques"/>
+	</field>
+	<pageHeader>
+		<band height="147">
+			<staticText>
+				<reportElement positionType="Float" x="183" y="2" width="174" height="17" uuid="4d1a18db-d0b8-4bd3-b801-240cd4af2e9e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Listado de Cobros Cheques]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="121" width="531" height="1" uuid="1d30317d-372b-467e-b46d-04bfd0ea73de"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="123" width="90" height="17" uuid="8f0c07e8-5146-4b1a-9446-d1e2f0069f62">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="105" y="123" width="100" height="17" uuid="2608fd5c-2ea3-4994-9ae8-1cdd8caf96ed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nro Cheque]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="141" width="531" height="1" uuid="afd7507c-9c1d-4a2c-b5de-81b8db4c565a"/>
+			</line>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="456" y="21" width="74" height="17" uuid="7efdc4d6-1a11-43e4-ab19-4f8b3de72414">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="456" y="40" width="75" height="17" uuid="8ffa9513-a4d9-4559-a020-241b0018e5af">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="418" y="21" width="47" height="17" uuid="26a6a175-03a0-45d5-83ed-f33b971625ae">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="40" width="47" height="17" uuid="46c11843-8f08-4ee9-b257-2a032033bd88">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<textField evaluationTime="Master">
+				<reportElement x="418" y="2" width="112" height="17" uuid="3400d05d-a3a8-4625-a470-1fbefcb2900c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pág.: " +$V{MASTER_CURRENT_PAGE} + " de " + $V{MASTER_TOTAL_PAGES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="4" y="21" width="68" height="17" uuid="3910776a-6048-4257-b87d-31e191ab4bc0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="4" y="2" width="164" height="17" uuid="36ff5402-1b76-48c9-83eb-3f6e93fdd236">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FANTASY EVENTS]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="51" y="21" width="117" height="17" uuid="6d972432-8094-445a-afd3-ee6d614fdf60">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_usuario} !=null ? $P{p_usuario} : " "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="4" y="40" width="68" height="17" uuid="e17dc78f-3704-4629-8892-98773e1eed89">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="51" y="40" width="117" height="17" uuid="d5bf3c81-3232-42c2-9da8-4e3b8e9aef23">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_sucursal} !=null ? $P{p_sucursal} : " "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="183" y="125" width="100" height="16" uuid="77ff2783-3cff-47a8-b39f-9eb13e7003fc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="63" width="90" height="17" uuid="47eefaa9-44ec-45cd-b1a0-1335c589b06f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Parámetros:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="122" y="63" width="100" height="17" uuid="ab0cf1dc-f6e1-401a-931d-970595c86d71">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Entidad desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="302" y="63" width="100" height="16" uuid="3df66202-0c92-48d9-b6ee-389acbb039af">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Entidad Hasta:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="61" width="531" height="1" uuid="01870cbf-8bb1-4887-9b51-f0b955db6e90"/>
+			</line>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="198" y="66" width="100" height="20" uuid="e76ee87b-f473-450b-8a8b-63c2504a8864"/>
+				<textFieldExpression><![CDATA[$P{p_entidad_desde}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="377" y="65" width="100" height="20" uuid="db07cca4-90e1-432f-8ab6-6c152d60c44e"/>
+				<textFieldExpression><![CDATA[$P{p_entidad_hasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="81" width="100" height="17" uuid="e2644285-02f4-4607-bd54-93f0480327f8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cobro Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="122" y="80" width="100" height="17" uuid="5b5ce557-ce44-46f2-bd90-9c5869eda21f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cobro Hasta:]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="74" y="84" width="112" height="17" uuid="60cd141f-876a-423a-8b02-7b56fd658045"/>
+				<textFieldExpression><![CDATA[$P{p_cobro_desde}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="191" y="83" width="100" height="20" uuid="86d1a5d7-4947-423e-9950-0d4d3aad9b88"/>
+				<textFieldExpression><![CDATA[$P{p_cobro_hasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="4" y="100" width="100" height="17" uuid="d9d262f3-b7a9-4d37-83b8-0943724744dc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tipo Cheque Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="125" y="100" width="137" height="17" uuid="a8992f5c-f6e6-47c0-a6d9-fc430fcf5e92">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tipo Cheque Hasta:]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="105" y="103" width="63" height="16" uuid="a1ae3443-8312-4e3d-b68e-978f89879c30"/>
+				<textFieldExpression><![CDATA[$P{p_tipo_cheque_desde}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="223" y="103" width="120" height="20" uuid="cbfc0d5d-5d77-4d3e-9ef0-806b8b37b030"/>
+				<textFieldExpression><![CDATA[$P{p_tipo_cheque_hasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="240" y="126" width="100" height="16" uuid="0a4c8a43-24ea-4aa7-b704-b5be9a024f60">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Emision]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="329" y="126" width="100" height="16" uuid="fa711ac9-c7c0-4901-967f-708d8fe6b1ac">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Retiro]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="21">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="4" y="2" width="96" height="18" uuid="4866471f-b6ed-4e40-9e5c-d6cf0378f173"/>
+				<textFieldExpression><![CDATA[$F{id_cobro_cheque}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="105" y="0" width="100" height="20" uuid="b8841f4c-9910-4dc9-989a-03b2fa029146"/>
+				<textFieldExpression><![CDATA[$F{nro_cheque}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="183" y="0" width="120" height="20" uuid="48749d24-1444-4f3d-b09e-817bdcffaf0c"/>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="238" y="1" width="120" height="20" uuid="b7b10c4b-a88f-468b-a5fa-bd239ead2d95"/>
+				<textFieldExpression><![CDATA[$F{fecha_emision}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="331" y="1" width="120" height="20" uuid="03b7f7f6-2d8a-4e27-a4ca-8f83222687eb"/>
+				<textFieldExpression><![CDATA[$F{fecha_retiro}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="29">
+			<line>
+				<reportElement x="0" y="3" width="531" height="1" uuid="af5a7c08-25d9-4ea9-81af-87716129d5ea"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="9" y="7" width="128" height="17" uuid="b9eda2a4-f656-4bc4-bc3f-31e235c8c7f9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FANTASY EVENTS]]></text>
+			</staticText>
+			<textField evaluationTime="Master">
+				<reportElement x="423" y="7" width="107" height="17" uuid="c7778958-fb91-4a07-bdb2-7f9b314f998c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pág.: " +$V{MASTER_CURRENT_PAGE} + " de " + $V{MASTER_TOTAL_PAGES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="202">
+			<line>
+				<reportElement x="0" y="3" width="531" height="1" uuid="d028c488-1b38-4750-8fdb-362a0f497074"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="213" y="6" width="128" height="17" uuid="0f9cb698-e022-4b6a-9e40-0814994f860f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[*** FIN DEL LISTADO***]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

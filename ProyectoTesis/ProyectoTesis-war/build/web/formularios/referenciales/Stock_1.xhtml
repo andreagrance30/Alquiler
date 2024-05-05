@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <h:outputStylesheet library="css" name="formularios.css" />
+                <title>Stock</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:layout fullPage="True">
+
+                <p:layoutUnit position="north"
+                              header="Sistema Punto de Venta"
+                              size="80"> 
+                    <h:form id="formSession">
+                        <center>
+                        <p:panelGrid columns="5">
+                            <p:outputLabel value="Usuario:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.usuarios.idUsuario}"/>
+                            <p:outputLabel value="Sucursal:"/>
+                            <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.sucursales.idSucursal.toString()}-#{beanAcceso.usuariossucursales.sucursales.descripcion}"/>
+                            <p:clock pattern="HH:mm:ss dd/MM/yyyy"/>
+                        </p:panelGrid>    
+                        </center>    
+                    </h:form>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center"
+                              header="Administrar Stock"> 
+                    <h:form id="formStock">
+                        <p:growl id="gStock" life="5000"/>
+                        <p:dataTable id="tbStock"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanStock.listarStock()}"
+                                     var="suc"
+                                     selection="#{beanStock.stock}"
+                                     selectionMode="single"
+                                     rowKey="#{suc}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" 
+                                    oncomplete="PF('digEditarBorrar').show()" 
+                                    update=":formEditarBorrar"/>
+                            <p:column headerText="Codigo" 
+                                      width="40">
+                                <h:outputText value="#{suc.productos.idProducto}-#{suc.depositos.idDeposito}"/>
+                            </p:column>
+                            <p:column headerText="Producto">
+                                <h:outputText value="#{suc.productos.idProducto}-#{suc.productos.descripcion}"/>
+                            </p:column>   
+                            <p:column headerText="Depositos">
+                                <h:outputText value="#{suc.depositos.idDeposito}-#{suc.depositos.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Existencia">
+                                <h:outputText value="#{suc.existencia}">
+                                    <f:convertNumber/>
+                                </h:outputText>
+                            </p:column>                              
+                            <p:column>
+                                <h:outputText value="Seleccione para Editar/Eliminar"/>
+                            </p:column>
+                            <f:facet name="header">
+                                <p:commandButton value="Nuevo"
+                                                 icon="ui-icon-circle-plus"
+                                                 oncomplete="PF('digNuevo').show()"
+                                                 actionListener="#{beanStock.Nuevo()}" 
+                                                 update=":formNuevo"/>
+                                <p:commandButton value="Inicio"
+                                                 icon="ui-icon-home"
+                                                 actionListener="#{beanStock.Menu()}"
+                                                 update=":formStock"
+                                                 />
+                                <p:commandButton value="Salir"
+                                                 icon="ui-icon-circle-close"
+                                                 actionListener="#{beanStock.Salir()}"
+                                                 />
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+
+
+                <p:dialog widgetVar="digNuevo"
+                          header="Agregar Stock"
+                          id="digNuevo">
+                    <h:form id="formNuevo"
+                            onkeypress="if (event.keyCode === 13) { return false; }">     
+                        <p:messages/>
+                        <p:panelGrid columns="2">                            
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanStock.stock.depositos.idDeposito}-#{beanStock.stock.productos.idProducto}"
+                                         />                       
+                            <h:outputText value="Producto:"/>
+                            <p:selectOneMenu value="#{beanStock.stock.productos}" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{beanProductos.listarProductos()}" 
+                                               var="co" 
+                                               itemLabel="#{co.idProducto}-#{co.descripcion}" 
+                                               itemValue="#{co}" />   
+                            </p:selectOneMenu>   
+                            <h:outputText value="Deposito:"/>
+                            <p:selectOneMenu value="#{beanStock.stock.depositos}" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{beanDepositos.listarDepositos()}" 
+                                               var="de" 
+                                               itemLabel="#{de.idDeposito}-#{de.descripcion}" 
+                                               itemValue="#{de}" />   
+                            </p:selectOneMenu>
+                            <h:outputText value="Existencia:"/>
+                            <p:inputText value="#{beanStock.stock.existencia}" 
+                                         maxlength="5" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Existencia">
+                                <f:convertNumber/>
+                            </p:inputText>                             
+                            <p:commandButton value='Grabar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanStock.Grabar()}"
+                                             update=":formNuevo"/>
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digNuevo').hide()"/>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
+                
+                <p:dialog widgetVar="digEditarBorrar"
+                          header="Modificar/Borrar Stock"
+                          id="digEditarBorrar">
+                    <h:form id="formEditarBorrar"
+                            onkeypress="if (event.keyCode === 13) { return false; }">
+                        <p:messages/>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Codigo:"/>
+                            <p:inputText readonly="true"
+                                         value="#{beanStock.stock.depositos.idDeposito}-#{beanStock.stock.productos.idProducto}"
+                                         />                       
+                            <h:outputText value="Producto:"/>
+                            <p:selectOneMenu value="#{beanStock.stock.productos}" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{beanProductos.listarProductos()}" 
+                                               var="co" 
+                                               itemLabel="#{co.idProducto}-#{co.descripcion}" 
+                                               itemValue="#{co}" />   
+                            </p:selectOneMenu>   
+                            <h:outputText value="Deposito:"/>
+                            <p:selectOneMenu value="#{beanStock.stock.depositos}" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{beanDepositos.listarDepositos()}" 
+                                               var="de" 
+                                               itemLabel="#{de.idDeposito}-#{de.descripcion}" 
+                                               itemValue="#{de}" />   
+                            </p:selectOneMenu> 
+                            <h:outputText value="Existencia:"/>
+                            <p:inputText value="#{beanStock.stock.existencia}" 
+                                         maxlength="5" 
+                                         onblur="value=value.toUpperCase()"
+                                         onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         required="true"
+                                         requiredMessage="Debe Ingresar Existencia">
+                                <f:convertNumber/>
+                            </p:inputText>                                  
+                            <p:commandButton value='Modificar'
+                                             icon='ui-icon-disk'
+                                             actionListener="#{beanStock.Editar()}"
+                                             update=":formEditarBorrar"/>
+                            <p:commandButton value='Borrar'
+                                             icon='ui-icon-trash'
+                                             actionListener="#{beanStock.Borrar()}"
+                                             />                            
+                            <p:commandButton value='Cancelar'
+                                             icon='ui-icon-close'
+                                             oncomplete="PF('digEditarBorrar').hide()"/>
+                        </p:panelGrid>
+                    </h:form>    
+                </p:dialog>
+            </p:layout> 
+        </h:body>
+    </f:view>
+</html>
+

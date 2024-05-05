@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Apertura Cierre de Caja</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+                       <h:form id="formAperturaCierreCaja"
+                            onkeypress="if (event.keyCode === 13) {
+                                        return false;
+                                        }">
+                        <p:growl id="gAperturaCierreCaja" life="5000"/>
+                        <f:metadata>
+                            <f:viewAction action="#{beanAperturaCierreCaja.Inicializa()}" />
+                        </f:metadata>                      
+                        <p:fieldset legend="Apertura">
+                            <h:panelGrid columns="4">
+                                <h:outputText value="Monto Inicial:"/>
+                                <p:inputText value="#{beanAperturaCierreCaja.aperturacierrecaja.montoInicial}" 
+                                             maxlength="9"                                              
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             id="montoincial">
+                                    <f:convertNumber/>
+                                </p:inputText>
+                            <h:outputText value="Caja:"/>
+                            <p:selectOneMenu value="#{beanAperturaCierreCaja.aperturacierrecaja.idCaja}" converter="omnifaces.SelectItemsConverter"
+                                             filter="true" filterMatchMode="contains"
+                                             id="caja">
+                                <f:selectItems value="#{beanCajas.listarCajasSucursal()}" 
+                                               var="im" 
+                                               itemLabel="#{im.idCaja} #{im.estado == 'A'? 'A-ABIERTO':im.estado == 'C'?'C-CERRADO':'I-INACTIVO' }" 
+                                               itemValue="#{im}" />   
+                            </p:selectOneMenu>                                   
+                            </h:panelGrid>        
+                        </p:fieldset>
+                        <p:fieldset legend="Cierre">
+                            <h:panelGrid columns="6">
+                                <h:outputText value="Monto Efectivo:"/>
+                                <p:inputText value="#{beanAperturaCierreCaja.aperturacierrecaja.montoEfectivoCierre}" 
+                                             maxlength="9" 
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             id="montoefectivo"
+                                             >
+                                    <f:convertNumber/>
+                                </p:inputText>                
+                                <h:outputText value="Monto Cheque:"/>
+                                <p:inputText value="#{beanAperturaCierreCaja.aperturacierrecaja.montoChequeCierre}" 
+                                             maxlength="9" 
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             id="montocheque"
+                                             >
+                                    <f:convertNumber/>
+                                </p:inputText>                                
+                                <h:outputText value="Monto Tarjeta:"/>
+                                <p:inputText value="#{beanAperturaCierreCaja.aperturacierrecaja.montoTarjetaCierre}" 
+                                             maxlength="9" 
+                                             onkeypress="if (event.which &lt; 48 || event.which &gt; 57) return false;"
+                                             id="montotarjeta">
+                                    <f:convertNumber/>
+                                </p:inputText>
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p:fieldset>
+                            <h:panelGrid columns="6">  
+                                 <b:commandButton value="Apertura"
+                                     iconAwesome="fa-plus-circle"
+                                     actionListener="#{beanAperturaCierreCaja.Apertura()}"
+                                     look="success"
+                                     update=":formAperturaCierreCaja"
+                                     id="btnapertura"
+                                     /> 
+                                 <b:commandButton value="Cierre"
+                                     iconAwesome="fa-print" 
+                                     actionListener="#{beanAperturaCierreCaja.Cierre()}"
+                                     look="primary"
+                                     id="btncierre"
+                                    /> 
+                                  <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formAperturaCierreCaja')}"
+                                     update=":formAperturaCierreCaja"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />
+                                  <b:commandButton value="Reporte"
+                                                   iconAwesome="fa-print"                                     
+                                                   oncomplete="PF('digReporteAper').show()"
+                                                   update=":formAperturaCierreCaja"/>      
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>                          
+        </ui:define>
+</ui:composition>

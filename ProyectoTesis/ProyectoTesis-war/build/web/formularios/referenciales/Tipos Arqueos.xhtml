@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>TiposArqueos</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido"> 
+        <h:form id="formTiposArqueos">
+            <p:dataTable id="tbTiposArqueos"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="5,10,15"
+                         value="#{beanTiposArqueos.listarTiposArqueos()}"
+                         var="suc"
+                         selection="#{beanTiposArqueos.tipoarqueo}"
+                         selectionMode="single"
+                         rowKey="#{suc.idTipoArqueo}"
+                         emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarBorrarTiposArqueos').show()" 
+                        update=":formEditarBorrarTiposArqueos"/>
+                <p:column headerText="Codigo" 
+                          sortBy="#{suc.idTipoArqueo}" 
+                          filterBy="#{suc.idTipoArqueo}" 
+                          filterMatchMode="contains"
+                          width="120">
+                    <h:outputText value="#{suc.idTipoArqueo}"/>
+                </p:column>
+                <p:column headerText="Descripcion"
+                          sortBy="#{suc.descripcion}" 
+                          filterBy="#{suc.descripcion}" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{suc.descripcion}"/>
+                </p:column>
+                <p:column width="50">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                            
+                </p:column>   
+
+                <f:facet name="header">
+                    <h1 id="title" >TiposArqueos</h1>
+                    <b:commandButton value="Nuevo"
+                                     icon="ui-icon-circle-plus"
+                                     oncomplete="PF('digNuevoTiposArqueos').show()"
+                                     actionListener="#{beanTiposArqueos.Nuevo()}" 
+                                     look="success"
+                                     iconAwesome="fa-plus-circle"
+                                     update=":formNuevoTiposArqueos"/>
+                    <b:commandButton value="Reporte"
+                                     icon="ui-icon-print"
+                                     onclick="document.getElementById('formReporteTiposArqueos:imprimir').click()"
+                                     look="primary"
+                                     iconAwesome="fa-print"
+                                     update=":formTiposArqueos"/>                                 
+                    <b:commandButton value="Inicio"
+                                     icon="ui-icon-home"
+                                     actionListener="#{Metodos.Menu('formTiposArqueos')}"
+                                     update=":formTiposArqueos"
+                                     look="info"
+                                     iconAwesome="fa-home"
+                                     />  
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

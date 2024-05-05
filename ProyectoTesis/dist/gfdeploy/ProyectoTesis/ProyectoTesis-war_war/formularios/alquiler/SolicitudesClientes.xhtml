@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title> Solicitudes de Clientes </title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <h:form id="formSolicitud" >  
+    <h1 id="title" >Solicitudes de Clientes</h1> 
+    <f:metadata>
+        <f:viewAction action="#{beanSolicitudesPedidos.Inicializa()}" />
+    </f:metadata>  
+     <p:panelGrid columns="4">
+                <h:outputText value="Número Solicitud: "/>
+                <p:inputText value="#{beanSolicitudesPedidos.pedido.idSolicitudPedido}"
+                             readonly="true"/>
+                    <h:outputText value="Fecha Pedido: "/>
+                     <p:calendar value="#{beanSolicitudesPedidos.pedido.fechaPedido}" 
+                            pattern="dd/MM/yyyy"
+                            locale="es"
+                            mode="popup"
+                            showOn="button"
+                            required="true"
+                            requiredMessage="Debe Ingresar Fecha Pedido"                                         
+                            />
+                      <h:outputText value="Presupuesto del Cliente: "/>
+                 <p:inputText value="#{beanSolicitudesPedidos.pedido.presupuestoCliente}"/>
+                 <h:outputText value="Fecha Devolución: "/>
+                 <p:calendar value="#{beanSolicitudesPedidos.pedido.fechaDevolucion}" 
+                            pattern="dd/MM/yyyy"
+                            locale="es"
+                            mode="popup"
+                            showOn="button"
+                            required="true"
+                            requiredMessage="Debe Ingresar Fecha Devolución"                                         
+                            />
+                  <h:outputText value="Dirección Entrega: "/>
+                 <p:inputText value="#{beanSolicitudesPedidos.pedido.direccionEntrega}"/>
+                <h:outputText value="Fecha Entrega: "/>
+                 <p:calendar value="#{beanSolicitudesPedidos.pedido.fechaEntrega}" 
+                            pattern="dd/MM/yyyy"
+                            locale="es"
+                            mode="popup"
+                            showOn="button"
+                            required="true"
+                            requiredMessage="Debe Ingresar Fecha Entrega"                                         
+                            />
+                 <h:outputText value="Dirección Devolución: "/>
+                 <p:inputText style="width: 300px;" value="#{beanSolicitudesPedidos.pedido.direccionDevolucion}"/>
+                 <h:outputText value="Observación: "/>
+                 <p:inputText  style="width: 400px;" value="#{beanSolicitudesPedidos.pedido.observacion}"/>
+                <h:outputText  value="Cliente:"/>
+                <p:selectOneMenu value="#{beanSolicitudesPedidos.pedido.idCliente}" converter="omnifaces.SelectItemsConverter"
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 widgetVar="cliente"
+                                 id="cliente"
+                                 style="width: 300px;"
+                                 >
+                    <f:selectItems value="#{beanClientes.listarClientes()}" 
+                                   var="im" 
+                                   itemLabel="Cod.: #{im.idCliente} - Nombre: #{im.personas.primerNombre} #{im.personas.segundoNombre} #{im.personas.primerApellido} #{im.personas.segundoApellido}" 
+                                   itemValue="#{im}" />   
+                </p:selectOneMenu>                                                        
+            <b:commandButton value="Agregar Producto"
+                             iconAwesome="fa-plus-circle"
+                             oncomplete="PF('digAgregarProductoSolicitudes').show()"
+                             actionListener="#{beanSolicitudesPedidos.NuevoProducto()}" 
+                             look="success"
+                             update=":formAgregarProductoSolicitudes"
+                             />
+            </p:panelGrid>  
+     <p:panelGrid columns="1">
+                <p:dataTable id="tbSolicitudDet"
+                     paginator="true"
+                     rows="10"
+                     rowsPerPageTemplate="5,10,15"
+                     value="#{beanSolicitudesPedidos.listarSolicitudesPedidosDet()}"
+                     var="ve"
+                     selection="#{beanSolicitudesPedidos.pedidodet}"
+                     selectionMode="single"
+                     rowKey="#{ve.stock}"
+                     emptyMessage="No hay datos">
+                <p:ajax event="rowSelect" 
+                        oncomplete="PF('digEditarProductoSolicitudes').show()" 
+                        update=":formEditarProductoSolicitudes"/>
+                <p:ajax event="rowUnselect" update=":formSolicitud:tbSolicitudDet"/>
+            <p:column headerText="Codigo" 
+                      width="40">
+                <h:outputText value="#{ve.stock.productos.idProducto}"/>
+            </p:column>
+                <p:column headerText="Descripcion">
+                    <h:outputText value="#{ve.stock.productos.descripcion}"/>
+                </p:column>                                           
+                <p:column headerText="Cantidad">
+                    <h:outputText value="#{ve.cantidad}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </p:column> 
+                <p:column width="2%">
+                    <b:iconAwesome value="pencil" /> 
+                    <b:iconAwesome value="trash"  />                                                                              
+                </p:column>                                                            
+                </p:dataTable>
+            </p:panelGrid>
+    <p:panelGrid columns="6">
+                <p:commandButton value='Guardar'
+                                 icon='ui-icon-disk'
+                                 actionListener="#{beanSolicitudesPedidos.Grabar()}" />    
+                <p:commandButton value="Editar"
+                                 icon="ui-icon-newwin"
+                                 oncomplete="PF('digAnularAprobarSolicitudes').show()"                                                 
+                                 actionListener="#{beanSolicitudesPedidos.Nuevo()}"
+                                 update=":formAnularAprobarSolicitudes"/>                                                 
+                <p:commandButton value="Cancelar"
+                                 icon="ui-icon-trash"
+                                 update=":formSolicitud"
+                                 actionListener="#{beanSolicitudesPedidos.Nuevo()}"/>                                
+                <b:commandButton value="Salir"
+                     iconAwesome="fa-home"
+                     actionListener="#{Metodos.Menu('formSolicitud')}"
+                     update=":formSolicitud"
+                     look="info"
+                     />                            
+            </p:panelGrid>   
+        </h:form>
+    </ui:define>
+</ui:composition>
+

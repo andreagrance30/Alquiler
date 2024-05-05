@@ -1,0 +1,31 @@
+body{
+    background-color: rgb(221 221 221) !important;
+}
+.ui-panel, .ui-layout-container{
+    width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; 
+    font-size: small;
+    border-color: transparent;
+}
+
+.ui-menubar{
+    /*border-color: transparent !important;
+    background-color: transparent !important;*/
+    text-align: center;
+    /*margin-left: 300px;*/
+}
+
+.ui-menu-list, .ui-menuitem{
+    /*background: transparent !important;
+    background-color: lightgray !important;*/
+    text-align: center;
+}
+.ui-menuitem-text{
+    color: black;
+}
+.ui-widget-content{
+    font-size: small;
+
+}

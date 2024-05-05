@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <f:facet name="first">
+            <title>Menu Principal</title>
+            <h:outputStylesheet library="css" name="principal.css" />  
+            <!-- <h:outputScript library="js" name="calendar_es.js" />     -->
+        </f:facet>
+    </h:head>
+    <h:body>
+        <h:form id="formPrincipal">  
+            <p:layout fullPage="true">        
+                <p:layoutUnit position="west" size="240" header ="Fecha y Hora">       
+                    <h:outputScript name="js/calendar_lenguaje.js" />                    
+                    <p:calendar mode="inline"  locale="es" />
+                    <p:clock pattern="HH:mm:ss dd/MM/yyyy" />
+                </p:layoutUnit>                
+                <p:layoutUnit position="center" header="Sistema de Alquiler">
+                    <p:outputLabel value="Usuario:"/>
+                    <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.usuarios.idUsuario}"/>
+                    <p:outputLabel value="Sucursal:"/>
+                    <p:inputText readonly="true" value="#{beanAcceso.usuariossucursales.sucursales.idSucursal.toString()}-#{beanAcceso.usuariossucursales.sucursales.descripcion}"/>
+                    <p:messages id="mensaje" autoUpdate="true"/>
+                    <p:menubar>    
+                        <p:submenu label="Referenciales">
+                            <p:menuitem value="Cajas" url="referenciales/Cajas.xhtml"></p:menuitem>
+                            <p:menuitem value="Cargos" url="referenciales/Cargos.xhtml"></p:menuitem>
+                            <p:menuitem value="Clasificaciones" url="referenciales/Clasificaciones.xhtml"></p:menuitem>
+                            <p:menuitem value="Condiciones" url="referenciales/Condiciones.xhtml"></p:menuitem>
+                            <p:menuitem value="Depositos" url="referenciales/Depositos.xhtml"></p:menuitem>
+                            <p:menuitem value="Entidades Emisoras" url="referenciales/Entidades Emisoras.xhtml"></p:menuitem>
+                            <p:menuitem value="Impuestos" url="referenciales/Impuestos.xhtml"></p:menuitem>
+                            <p:menuitem value="Productos" url="referenciales/Productos.xhtml"></p:menuitem>
+                            <p:menuitem value="Proveedores" url="referenciales/Productos.xhtml"></p:menuitem>
+                            <p:menuitem value="Stock" url="referenciales/Stock.xhtml"></p:menuitem>
+                            
+                            <p:menuitem value="Roles" url="referenciales/Roles.xhtml"></p:menuitem>
+                            <p:menuitem value="Terminales" url="referenciales/Terminales.xhtml"></p:menuitem> 
+                            <p:menuitem value="Tipos Arqueos" url="referenciales/Tipos Arqueos.xhtml"></p:menuitem>
+                            <p:menuitem value="Tipos Cheques" url="referenciales/Tipos Cheques.xhtml"></p:menuitem>                           
+                            <p:menuitem value="Tipos Personas" url="referenciales/Tipos Personas.xhtml"></p:menuitem>
+                            <p:menuitem value="Transacciones Comerciales" url="referenciales/Transacciones Comerciales.xhtml"></p:menuitem>
+                            <p:menuitem value="Tipos de  Comprobantes" url="referenciales/TiposComprobantes.xhtml"></p:menuitem>
+                            
+                            
+                            
+                            <p:menuitem value="Tarjetas" url="referenciales/Tarjetas.xhtml"></p:menuitem>
+                            
+                            <p:menuitem value="Clientes" url="referenciales/Clientes.xhtml"></p:menuitem>
+                            <p:menuitem value="Sucursales" url="referenciales/Sucursales.xhtml"></p:menuitem>
+                            <p:menuitem value="Vehiculos" url="referenciales/Vehiculos.xhtml"></p:menuitem>
+                            
+                            <p:menuitem value="Timbrados" url="referenciales/Timbrados.xhtml"></p:menuitem>
+                            
+                            
+                        </p:submenu>
+
+                        <p:submenu label="Ventas">
+
+                        </p:submenu>   
+
+                        <p:submenu label="Compras">
+                        </p:submenu>    
+
+                        <p:submenu label="Alquiler">
+                        </p:submenu> 
+
+                        <p:submenu label="Ayuda">
+                            <p:menuitem  value="Ayuda" url="Ayuda.pdf"></p:menuitem>
+                        </p:submenu>
+
+                    </p:menubar>   
+                </p:layoutUnit>   
+            </p:layout>   
+        </h:form>    
+    </h:body>
+</html>
+

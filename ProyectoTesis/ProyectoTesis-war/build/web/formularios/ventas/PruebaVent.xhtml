@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/formularios/Menu Principal.xhtml"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:b="http://bootsfaces.net/ui">
+    <ui:define name="head">
+        <f:facet name="first">
+            <title>Ventas</title>
+        </f:facet>
+    </ui:define>
+    <ui:define name="contenido">
+        <f:facet name="header">
+            <h1 id="title" >Factura de Venta</h1>
+        </f:facet>
+        <h:form id="formVentas">
+             <f:metadata>
+            <f:viewAction action="#{beanVentas.Inicializa()}" />
+             </f:metadata>              
+                            <p:panelGrid columns="6">                             
+                                <p:outputLabel value="Total Grav. 5%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalgrav5}">
+                                    <f:convertNumber/>
+                                </p:inputText>
+                                <p:outputLabel value="Total Grav. 10%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalgrav10}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Exentas:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totalexentas}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva 5%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva5}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva 10%:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva10}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                                <p:outputLabel value="Total Iva:"/>
+                                <p:inputText readonly="true" value="#{beanVentas.totaliva}">
+                                    <f:convertNumber/>
+                                </p:inputText>    
+                            </p:panelGrid>
+                      
+                            <p:panelGrid columns="1">
+                                <p:dataTable id="tbVentasDet"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="5,10,15"
+                                     value="#{beanVentas.listarVentasDet()}"
+                                     var="ve"
+                                     selection="#{beanVentas.ventadet}"
+                                     selectionMode="single"
+                                     rowKey="#{ve.stock}"
+                                     resizableColumns="true"
+                                     emptyMessage="No hay datos">
+                                <p:ajax event="rowSelect" 
+                                        oncomplete="PF('digEditarProductoVentas').show()" 
+                                        update=":formEditarProductoVentas"/>
+                                <p:column headerText="Codigo" 
+                                          width="40">
+                                    <h:outputText value="#{ve.stock.productos.idProducto}"/>
+                                </p:column>
+                                <p:column headerText="Descripcion">
+                                    <h:outputText value="#{ve.stock.productos.descripcion}"/>
+                                </p:column>                             
+                                <p:column headerText="Precio Unitario">
+                                    <h:outputText value="#{ve.stock.productos.precioVenta}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>   
+                                <p:column headerText="% Iva">
+                                    <h:outputText value="#{ve.stock.productos.idImpuesto.descripcion}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>                                             
+                                <p:column headerText="Cantidad">
+                                    <h:outputText value="#{ve.cantidad}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>                                  
+                                <p:column headerText="Total Linea" resizable="false">
+                                    <h:outputText value="#{(ve.stock.productos.precioVenta * ve.cantidad)}">
+                                        <f:convertNumber/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column width="2%">
+                                        <span class="ui-icon ui-icon-trash " style="display:inline-block;width:50%;text-align:center;float:left;"/>                                          
+                                        <span class="ui-icon ui-icon-pencil " style="display:inline-block;width:50%;text-align:center"/>                                                                             
+                                </p:column>                               
+                                <f:facet name="header" >
+                                    <p:commandButton value="Agregar Producto"
+                                                     icon="ui-icon-circle-plus"
+                                                     oncomplete="PF('digAgregarProductoVentas').show()"
+                                                     actionListener="#{beanVentas.NuevoProducto()}" 
+                                                     update=":formAgregarProductoVentas"/>                         
+                                </f:facet>                                
+                                </p:dataTable>
+                            </p:panelGrid>
+                           
+            
+            
+            
+                    </h:form> 
+              </ui:define>
+</ui:composition>
